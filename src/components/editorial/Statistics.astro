@@ -1,0 +1,6 @@
+---
+import SectionHead from './SectionHead.astro';
+interface Props { items: {value: string; prefix?: string; label: string}[]; title?: string; }
+const { items, title = 'En números' } = Astro.props;
+---
+<section class="ed-statistics"><div class="wrap"><SectionHead number="02" title="ALTUM CAPITAL" note="DEUDA PRIVADA"/><div class="ed-stat-layout"><h2 data-editorial-reveal>{title.split(' ')[0]}<br/><em>{title.split(' ').slice(1).join(' ')}</em></h2><dl class:list={['ed-stat-list',{'ed-stat-list--pair':items.length===2}]}>{items.map((item, index) => <div class:list={{'ed-stat-major':index<2}} data-editorial-reveal><dd><span>{item.prefix}</span>{item.value}</dd><dt>{item.label}</dt></div>)}</dl></div></div></section>

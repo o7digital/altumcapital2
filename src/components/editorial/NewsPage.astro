@@ -1,0 +1,11 @@
+---
+import EditorialLayout from '../../layouts/EditorialLayout.astro';
+import Hero from './Hero.astro';
+import SectionHead from './SectionHead.astro';
+import NewsRows from './NewsRows.astro';
+import { copy } from '../../data/editorial/content';
+---
+<EditorialLayout slug="blog" title="Noticias" description={copy('blog','Conoce acerca')}>
+  <Hero number="05" label="NOTICIAS" title="" accent="Noticias" intro={copy('blog','Conoce acerca')} photo="BG-1.jpg"/>
+  <section class="ed-section"><div class="wrap"><SectionHead number="01" title="NOTICIAS RELACIONADAS"/><NewsRows/></div></section>
+</EditorialLayout>

@@ -1,0 +1,11 @@
+---
+import EditorialLayout from '../../layouts/EditorialLayout.astro';
+import Hero from './Hero.astro';
+import SectionHead from './SectionHead.astro';
+import { copy } from '../../data/editorial/content';
+import { offices, site } from '../../data/site';
+---
+<EditorialLayout slug="contact" title="Contacto" description={copy('contact','Si tienes')}>
+  <Hero number="06" label="CONTACTO" title="" accent="Contacto" intro={copy('contact','Si tienes')} photo="contacto-altum.jpg"/>
+  <section class="ed-section"><div class="wrap"><SectionHead number="01" title="PARA MAS INFORMACIÓN"/><div class="ed-statement"><h2 data-editorial-reveal>Contác<em>tanos</em></h2><div data-editorial-reveal><p class="ed-lead">Te dejamos nuestros datos de contacto.</p><a class="ed-contact-mail" href={`mailto:${site.email}`}>{site.email} <span aria-hidden="true">↗</span></a></div></div><div class="ed-offices">{offices.map((office,index)=><article data-editorial-reveal><span class="ed-small">0{index+1} / {office.city}</span><h3>Dirección<br/><em>{office.short==='CDMX'?'CDMX':'Monterrey'}</em></h3><address>{office.address}</address><a class="ed-link" href={`tel:${office.tel}`}>{office.short}: {office.phone}<span aria-hidden="true">↗</span></a></article>)}</div></div></section>
+</EditorialLayout>

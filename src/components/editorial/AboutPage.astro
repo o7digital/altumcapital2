@@ -1,0 +1,21 @@
+---
+import EditorialLayout from '../../layouts/EditorialLayout.astro';
+import Hero from './Hero.astro';
+import Photo from './Photo.astro';
+import SectionHead from './SectionHead.astro';
+import Statistics from './Statistics.astro';
+import Principles from './Principles.astro';
+import { about } from '../../data/editorial/content';
+---
+<EditorialLayout slug="about" title="Nuestra Firma" description={about.intro}>
+  <Hero number="01" label="NUESTRA FIRMA" title="Nuestra" accent="Firma" intro={about.intro} photo="sobre-altum-capital.jpg"/>
+  <section class="ed-section"><div class="wrap"><SectionHead number="01" title="NUESTRO OBJETIVO"/>
+    <div class="ed-statement"><h2 data-editorial-reveal>Nuestro<br/><em>Objetivo</em></h2><p data-editorial-reveal>{about.objective}</p></div>
+    <div class="ed-diptych" data-editorial-reveal><Photo name="sobre-altum-capital-objetivo.jpg"/><Photo name="about-us.jpg"/></div>
+  </div></section>
+  <Statistics items={about.metrics}/>
+  <section class="ed-section"><div class="wrap"><SectionHead number="03" title="¿QUÉ HACEMOS?"/>
+    <div class="ed-activity"><div data-editorial-reveal><p class="ed-lead">{about.activity}</p><a class="ed-link" href="/soluciones-de-credito/">Soluciones de crédito <span aria-hidden="true">↗</span></a><Photo name="nuestra-firma.jpg" class="ed-inset-image"/></div><div class="ed-photo-column" data-editorial-reveal><Photo name="QUE-HACEMOS-ALTUM.jpg"/><Photo name="QUE-HACEMOS.jpg"/></div></div>
+  </div></section>
+  <section class="ed-section ed-difference" id="diferenciadores"><div class="wrap"><SectionHead number="04" title="NUESTRA FIRMA"/><div class="ed-principle-layout"><h2 data-editorial-reveal>¿En qué<br/><em>nos diferenciamos?</em></h2><Principles items={about.principles}/></div></div></section>
+</EditorialLayout>

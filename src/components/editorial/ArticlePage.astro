@@ -1,0 +1,19 @@
+---
+import EditorialLayout from '../../layouts/EditorialLayout.astro';
+import NewsRows from './NewsRows.astro';
+import RichText from './RichText.astro';
+import SectionHead from './SectionHead.astro';
+import entries from '../../data/editorial/prose.json';
+import type { RichBlock } from '../../data/editorial/types';
+interface Props { slug: string; }
+const { slug }=Astro.props;
+const post=entries.find(post=>post.slug===slug)!;
+// The source repeats its headline in some article bodies; retain the headline once.
+const blocks=post.blocks.filter(block=>!(block.kind==='heading'&&block.text?.replace(/[.\s]+$/,'')===post.title.replace(/[.\s]+$/,''))) as RichBlock[];
+---
+<EditorialLayout slug={slug} title={post.title} description={post.excerpt}>
+  <header class="ed-article-heading"><div class="wrap"><div class="ed-overline"><a href="/blog/">← NOTICIAS</a><span>ALTUM CAPITAL</span></div><h1>{post.title}</h1><div class="ed-article-meta"><span>{post.date}</span><span>Autor / {post.author}</span></div></div></header>
+  {post.cover&&<div class="ed-article-cover wrap"><figure class="ed-photo"><img src={post.cover.local} data-source-src={post.cover.source} alt={post.title} decoding="async"/></figure></div>}
+  <section class="ed-section"><div class="wrap ed-article-layout"><aside class="ed-article-aside"><span class="ed-small">ALTUM CAPITAL</span><p>{post.date}</p><p>{post.author}</p><a class="ed-link" href="/blog/">Noticias <span aria-hidden="true">↗</span></a></aside><RichText blocks={blocks}/></div></section>
+  <section class="ed-section ed-difference"><div class="wrap"><SectionHead number="02" title="PUBLICACIONES RECOMENDADAS"/><NewsRows exclude={slug} limit={4}/></div></section>
+</EditorialLayout>

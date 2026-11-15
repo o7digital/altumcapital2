@@ -12,7 +12,7 @@ const { title = 'Altum Capital — Financiamiento para Empresas', description = 
 <html lang="es"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>{title}</title><meta name="description" content={description}/><meta name="robots" content="noindex,nofollow"/><meta name="theme-color" content="#222921"/><link rel="icon" href="/favicon.svg" type="image/svg+xml"/></head>
 <body class:list={{ 'inner-page': inner }}>
   <a class="skip-link" href="#main">Saltar al contenido</a>
-  <Header inner={inner} client:load />
+  <Header inner={inner} currentPath={Astro.url.pathname} client:load />
   <slot />
   <Footer />
   <noscript><style is:inline>.hero-media img,.firm-image img,.investor-landscape img{opacity:1}.currency-tabs,.menu-toggle{display:none}</style>

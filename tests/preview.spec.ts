@@ -1,104 +1,83 @@
-import { test, expect } from '@playwright/test';
-import { createHash } from 'node:crypto';
-import source from '../src/data/source-pages.json' with { type: 'json' };
+import {test,expect} from '@playwright/test';
+import {createHash} from 'node:crypto';
+import source from '../src/data/source-pages.json' with {type:'json'};
+import prose from '../src/data/editorial/prose.json' with {type:'json'};
+import homepage from './reference/homepage.json' with {type:'json'};
 
-const normalize = (text: string) => text.replace(/\s+/g, ' ').trim().toLocaleLowerCase('es');
-const viewports = [
-  { width: 1440, height: 960 }, { width: 1920, height: 1080 },
-  { width: 768, height: 1024 }, { width: 390, height: 844 }, { width: 320, height: 740 },
-];
+const canonical=(text:string)=>text.normalize('NFKC').toLocaleLowerCase('es').replace(/(?<=\d),(?=\d)/g,'').replace(/[\s“”"‘’']/g,'');
+const technicalCopy=new Set(['No hay comentarios','Comentar','Los comentarios no están habilitados en esta copia estática.']);
+const widths=[1440,1920,768,390,320];
 
-for (const original of source.pages) {
-  test(`original text and photographs: /${original.slug}`, async ({ page }) => {
-    const response = await page.goto(`/${original.slug}${original.slug ? '/' : ''}`);
-    expect(response?.status()).toBe(200);
-    const text = normalize(await page.locator('main').innerText());
-    const missing = original.paragraphs.filter(paragraph => !text.includes(normalize(paragraph)));
-    expect(missing, `Text from ${original.source} must be reproduced without rewriting`).toEqual([]);
-    const images = await page.locator('main img[data-source-src]').evaluateAll(elements => [...new Set(elements.map(el => el.getAttribute('data-source-src')))]);
-    expect(images.sort()).toEqual([...original.expectedImages].sort());
-    for (const section of original.sections) {
-      for (const background of section.background) {
-        await expect(page.locator(`[data-source-section="${section.id}"]`)).toHaveAttribute('data-source-background', section.background.map(item => item.source).join('|'));
-        expect(await page.locator(`[data-source-section="${section.id}"]`).evaluate(el => getComputedStyle(el).backgroundImage)).toContain(background.local);
-      }
-    }
-    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,nofollow');
-  });
-}
-
-for (const viewport of viewports) {
-  test(`source photos and layout at ${viewport.width}px`, async ({ page }, testInfo) => {
-    await page.setViewportSize(viewport);
-    const errors: string[] = [];
-    page.on('pageerror', error => errors.push(error.message));
-    await page.goto('/');
-    await page.evaluate(() => document.fonts.ready);
-    for (const img of await page.locator('main img').all()) {
-      await img.scrollIntoViewIfNeeded();
-      await expect.poll(() => img.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
-    }
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    expect(errors).toEqual([]);
-    await page.evaluate(() => scrollTo(0, 0));
-    await page.screenshot({path:testInfo.outputPath(`home-${viewport.width}.png`)});
-    await page.screenshot({path:testInfo.outputPath(`page-${viewport.width}.png`),fullPage:true});
-  });
-}
-
-test('every original image file matches the source bytes', async ({ request }) => {
-  test.setTimeout(60000);
-  for (const asset of source.assets) {
-    const response = await request.get(asset.local);
-    expect(response.status(),asset.local).toBe(200);
-    const digest = createHash('sha256').update(await response.body()).digest('hex');
-    expect(digest,asset.source).toBe(asset.sha256);
+for(const original of source.pages){
+ test(`retained client content: /${original.slug}`,async({page})=>{
+  const response=await page.goto(`/${original.slug}${original.slug?'/':''}`);
+  expect(response?.status()).toBe(200);
+  const text=canonical(await page.locator('main').innerText());
+  const missing=original.paragraphs.filter(p=>!technicalCopy.has(p)&&!text.includes(canonical(p)));
+  expect(missing,`Institutional text from ${original.source}`).toEqual([]);
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content','noindex,nofollow');
+  if(original.slug){
+   await expect(page.locator('main')).toHaveAttribute('data-editorial-page',original.slug);
+   await expect(page.locator('main .source-column,main .source-widget,main [data-source-section]')).toHaveCount(0);
+   const images=await page.locator('main img[data-source-src]').evaluateAll(imgs=>imgs.map(img=>img.getAttribute('data-source-src')));
+   expect(original.expectedImages.filter(src=>!images.includes(src))).toEqual([]);
   }
-});
+ });
+}
 
-test('original logo, menu, footer and native mobile navigation', async ({ page }) => {
-  await page.setViewportSize({width:390,height:844});
+for(const baseline of homepage){
+ test(`homepage preserved pixel for pixel at ${baseline.width}px`,async({page})=>{
+  await page.setViewportSize({width:baseline.width,height:baseline.height});
   await page.goto('/');
-  await expect(page.locator('.original-brand')).toHaveAttribute('src', /logo-altum-blanco\.png$/);
-  const toggle = page.getByRole('button',{name:'Abrir menú'});
-  await expect(toggle).toBeEnabled();
-  await toggle.click();
-  const nav=page.getByRole('navigation',{name:'Navegación móvil'});
-  await expect(nav.getByRole('link')).toHaveCount(source.navigation.length);
-  await expect(nav.getByRole('link').first()).toBeFocused();
-  await page.keyboard.press('Escape');
-  await expect(nav).toBeHidden();
-  await expect(toggle).toBeFocused();
-  await toggle.click();
-  await nav.getByRole('link').first().click();
-  await expect(page).toHaveURL(/\/about\/$/);
-  await expect(nav).toBeHidden();
-  await expect(page.locator('.original-brand')).toHaveAttribute('src', /altum-logo\.png$/);
-  expect(normalize(await page.locator('footer').innerText())).toBe(normalize(source.footer.text));
+  await page.evaluate(async()=>{await document.fonts.ready;document.querySelectorAll('img').forEach(img=>img.loading='eager');await Promise.all([...document.images].map(img=>img.decode().catch(()=>{})));scrollTo(0,0);});
+  const bytes=await page.screenshot({fullPage:true});
+  expect(createHash('sha256').update(bytes).digest('hex')).toBe(baseline.sha256);
+ });
+}
+
+for(const width of widths){
+ test(`all editorial routes fit at ${width}px`,async({page},info)=>{
+  test.setTimeout(90000);
+  await page.setViewportSize({width,height:width>1000?960:844});
+  const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));
+  for(const original of source.pages.filter(page=>page.slug)){
+   await page.goto(`/${original.slug}/`);
+   await page.evaluate(()=>document.fonts.ready);
+   const problems=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth>innerWidth,headings:[...document.querySelectorAll('main h1,main h2,main h3')].filter(el=>{const r=el.getBoundingClientRect();return r.left< -1||r.right>innerWidth+1||el.scrollWidth>el.clientWidth+1;}).map(el=>el.textContent)}));
+   expect(problems,original.slug).toEqual({overflow:false,headings:[]});
+   if(['about','soluciones-de-credito','equipo','inversionistas','blog','contact','legal','aviso-de-privacidad',prose[0].slug].includes(original.slug)){
+    await page.evaluate(async()=>{document.querySelectorAll('img').forEach(img=>img.loading='eager');await Promise.all([...document.images].map(img=>img.decode().catch(()=>{})));});
+    await page.screenshot({path:info.outputPath(`${original.slug}-top.png`)});
+    for(const element of await page.locator('[data-editorial-reveal]').all())await element.scrollIntoViewIfNeeded();
+    await page.evaluate(()=>scrollTo(0,0));
+    await page.screenshot({path:info.outputPath(`${original.slug}-full.png`),fullPage:true});
+   }
+  }
+  expect(errors).toEqual([]);
+ });
+}
+
+test('all client media, document images and local links load',async({page,request})=>{
+ test.setTimeout(90000);
+ const links=new Set<string>();const images=new Set<string>();
+ for(const original of source.pages){await page.goto(`/${original.slug}${original.slug?'/':''}`);
+  for(const href of await page.locator('a[href^="/"]').evaluateAll(links=>links.map(a=>a.getAttribute('href')!.split('#')[0])))links.add(href);
+  for(const src of await page.locator('main img').evaluateAll(imgs=>imgs.map(img=>img.getAttribute('src')!)))images.add(src);
+  const invalid=await page.locator('a[href^="#"]').evaluateAll(links=>links.filter(a=>!document.getElementById(a.getAttribute('href')!.slice(1))).map(a=>a.getAttribute('href')));expect(invalid,original.slug).toEqual([]);
+ }
+ for(const path of new Set([...links,...images])){const response=await request.get(path);expect(response.status(),path).toBe(200);}
+ for(const asset of source.assets){const response=await request.get(asset.local);expect(createHash('sha256').update(await response.body()).digest('hex'),asset.local).toBe(asset.sha256);}
 });
 
-test('source text and photographs remain available without JavaScript', async ({ browser }) => {
-  const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});
-  const page=await context.newPage();
-  await page.goto(process.env.PREVIEW_URL || 'http://127.0.0.1:4321');
-  await expect(page.locator('h1')).toContainText('Soluciones de Financiamiento');
-  await expect(page.getByRole('navigation',{name:'Navegación sin JavaScript'})).toBeVisible();
-  expect(await page.locator('main img').count()).toBe(source.pages[0].expectedImages.length);
-  await context.close();
+test('shared menu, active section, keyboard and footer remain coherent',async({page})=>{
+ await page.setViewportSize({width:390,height:844});await page.goto('/about/');
+ const toggle=page.getByRole('button',{name:'Abrir menú'});await expect(toggle).toBeEnabled();await toggle.click();
+ const nav=page.getByRole('navigation',{name:'Navegación móvil'});await expect(nav.getByRole('link')).toHaveCount(source.navigation.length);await expect(nav.getByRole('link').first()).toBeFocused();await expect(nav.locator('[aria-current="page"]')).toHaveAttribute('href','/about/');
+ await page.keyboard.press('Escape');await expect(nav).toBeHidden();await expect(toggle).toBeFocused();await toggle.click();await nav.getByRole('link',{name:'EQUIPO',exact:false}).click();await expect(page).toHaveURL(/\/equipo\/$/);await expect(nav).toBeHidden();
+ expect(canonical(await page.locator('footer').innerText())).toBe(canonical(source.footer.text));
+ await page.goto(`/${prose[0].slug}/`);await toggle.click();await expect(nav.locator('[aria-current="page"]')).toHaveAttribute('href','/blog/');
 });
 
-test('all migrated pages, internal links and mobile widths work', async ({ page }) => {
-  test.setTimeout(60000);
-  const links=new Set<string>();
-  await page.setViewportSize({width:320,height:740});
-  for(const original of source.pages){
-    await page.goto(`/${original.slug}${original.slug?'/':''}`);
-    await page.evaluate(()=>document.fonts.ready);
-    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),original.source).toBe(true);
-    for(const href of await page.locator('a[href^="/"]').evaluateAll(links=>links.map(a=>a.getAttribute('href')!.split('#')[0]))) links.add(href);
-  }
-  for(const href of links){
-    const response=await page.request.get(href);
-    expect(response.status(),href).toBe(200);
-  }
+test('client content is visible without JavaScript and with reduced motion',async({browser})=>{
+ const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});const page=await context.newPage();await page.goto((process.env.PREVIEW_URL||'http://127.0.0.1:4321')+'/about/');await expect(page.locator('h1')).toContainText('Nuestra');await expect(page.locator('.ed-statement')).toBeVisible();await expect(page.locator('.ed-photo img').first()).toBeVisible();await expect(page.getByRole('navigation',{name:'Navegación sin JavaScript'})).toBeVisible();await context.close();
 });

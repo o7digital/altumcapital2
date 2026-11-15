@@ -1,0 +1,5 @@
+---
+interface Props { number: string; title: string; note?: string; dark?: boolean; }
+const { number, title, note } = Astro.props;
+---
+<div class="ed-section-head"><span><span>{number} /</span> {title}</span>{note && <span>{note}</span>}</div>

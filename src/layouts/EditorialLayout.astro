@@ -1,0 +1,17 @@
+---
+import SiteLayout from './SiteLayout.astro';
+import '../styles/editorial.css';
+interface Props { title: string; description?: string; slug: string; }
+const { title, description, slug } = Astro.props;
+---
+<SiteLayout title={`${title} — Altum Capital`} description={description} inner>
+  <main id="main" class="editorial-main" data-editorial-page={slug}><slot/></main>
+  <script>
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('ed-seen'); observer.unobserve(entry.target); } });
+      }, {threshold:.06});
+      document.querySelectorAll('[data-editorial-reveal]').forEach(element => { element.classList.add('ed-reveal'); observer.observe(element); });
+    }
+  </script>
+</SiteLayout>

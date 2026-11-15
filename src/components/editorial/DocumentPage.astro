@@ -1,0 +1,23 @@
+---
+import EditorialLayout from '../../layouts/EditorialLayout.astro';
+import Hero from './Hero.astro';
+import RichText from './RichText.astro';
+import SectionHead from './SectionHead.astro';
+import entries from '../../data/editorial/prose.json';
+import type { RichBlock, Chapter } from '../../data/editorial/types';
+interface Props { slug: string; }
+const {slug}=Astro.props;
+const entry=entries.find(entry=>entry.slug===slug)!;
+const legal=slug==='legal';
+const chapters:Chapter[]=[{title:legal?'Productos y entidades':'Aviso de privacidad',blocks:[]}];
+for(const block of entry.blocks as RichBlock[]){
+ if(block.kind==='heading')chapters.push({title:block.text||'',blocks:[]});
+ else if(legal&&block.text==='Altum CP SAPI de CV SOFOM ENR'&&chapters.length===2){chapters.push({title:'Unidades Especializadas de Atención',blocks:[block]});}
+ else chapters[chapters.length-1].blocks.push(block);
+}
+---
+<EditorialLayout slug={slug} title={legal?'Legal':'Aviso de Privacidad'}>
+  <Hero number="07" label="INFORMACIÓN INSTITUCIONAL" title={legal?'':'Aviso de'} accent={legal?'Legal':'Privacidad'}/>
+  <section class="ed-document-section"><div class="wrap ed-document-layout"><nav class="ed-document-nav" aria-label="Índice del documento"><span class="ed-small">CONTENIDO</span>{chapters.map((chapter,index)=><a href={`#documento-${index+1}`}><span>{String(index+1).padStart(2,'0')}</span>{chapter.title}</a>)}{entry.images.length>0&&<a href="#documentos"><span>↗</span>Documentos</a>}</nav><div class="ed-document-body">{chapters.map((chapter,index)=><section class="ed-document-chapter" id={`documento-${index+1}`}><div class="ed-chapter-label"><span>{String(index+1).padStart(2,'0')}</span><h2>{chapter.title}</h2></div><RichText blocks={chapter.blocks}/></section>)}</div></div></section>
+  {entry.images.length>0&&<section class="ed-section ed-difference" id="documentos"><div class="wrap"><SectionHead number="04" title="DOCUMENTOS"/><div class="ed-document-gallery">{entry.images.map((image,index)=><figure><a href={image.local} target="_blank" rel="noopener noreferrer"><img src={image.local} data-source-src={image.source} alt={image.alt} loading="lazy" decoding="async"/></a><figcaption><span>{String(index+1).padStart(2,'0')}</span>{image.alt}<a href={image.local} target="_blank" rel="noopener noreferrer" aria-label={`Abrir ${image.alt}`}>↗</a></figcaption></figure>)}</div></div></section>}
+</EditorialLayout>

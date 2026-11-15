@@ -1,0 +1,14 @@
+---
+import EditorialLayout from '../../layouts/EditorialLayout.astro';
+import Hero from './Hero.astro';
+import Photo from './Photo.astro';
+import SectionHead from './SectionHead.astro';
+import Statistics from './Statistics.astro';
+import { copy } from '../../data/editorial/content';
+---
+<EditorialLayout slug="equipo" title="Equipo" description={copy('equipo','Equipo especializado')}>
+  <Hero number="03" label="EQUIPO" title="Nuestro" accent="Equipo" intro={copy('equipo','Equipo especializado')} photo="BG-equipo.jpg"/>
+  <section class="ed-section"><div class="wrap"><SectionHead number="01" title="NUESTRO EQUIPO"/><div class="ed-statement"><h2 data-editorial-reveal>Nuestro<br/><em>Equipo</em></h2><p data-editorial-reveal>{copy('equipo','Nuestro Capital Humano')}</p></div><div class="ed-team-photos" data-editorial-reveal><Photo name="crop-coworkers-with-papers-in-office-2023-04-12-00-56-14-utc-scaled.jpeg"/><Photo name="sobre-altum-capital-objetivo.jpg"/></div></div></section>
+  <Statistics title="Nuestro Equipo" items={[{value:'40',prefix:'+',label:'Personas'},{value:'180',prefix:'+',label:'Años de experiencia acumulada en el sector financiero'}]}/>
+  <section class="ed-section"><div class="wrap"><SectionHead number="03" title="NUESTRO"/><div class="ed-team-closing"><p class="ed-lead" data-editorial-reveal>{copy('equipo','Altum Capital cuenta')}</p><Photo name="group-of-coworkers-working-on-project-together-in-2023-06-13-23-00-36-utc-scaled.jpg"/></div></div></section>
+</EditorialLayout>

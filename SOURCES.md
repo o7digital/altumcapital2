@@ -24,3 +24,8 @@ Les licences SIL Open Font License 1.1 sont dans `public/licenses/`.
 
 La maquette initiale et ses instructions restent archivées dans `docs/reference/`
 et sur la branche `backup`. Elles ne constituent plus la source éditoriale du site.
+
+Depuis la refonte éditoriale du 15 novembre 2026, cette archive sert de référence
+pour la conservation du contenu. Les pages internes ne réutilisent plus ses
+structures HTML ni ses mises en page : voir `docs/EDITORIAL_REDESIGN.md`.
+La homepage reste la référence visuelle protégée par comparaison des captures.

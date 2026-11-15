@@ -2,12 +2,14 @@ import { useEffect, useRef, useState } from 'react';
 import Brand from './Brand';
 import { navigation } from '../data/site';
 
-export default function Header({ inner = false }: { inner?: boolean }) {
+export default function Header({ inner = false, currentPath = '/' }: { inner?: boolean; currentPath?: string }) {
   const [open, setOpen] = useState(false);
   const [ready, setReady] = useState(false);
   const header = useRef<HTMLElement>(null);
   const toggle = useRef<HTMLButtonElement>(null);
   const menu = useRef<HTMLElement>(null);
+  const activeHref = navigation.find(link => link.href === currentPath)?.href ||
+    (currentPath.startsWith('/aviso-de-privacidad') ? '/legal/' : currentPath !== '/' ? '/blog/' : '');
 
   useEffect(() => setReady(true), []);
   useEffect(() => {
@@ -46,7 +48,7 @@ export default function Header({ inner = false }: { inner?: boolean }) {
   return <header ref={header} className={`site-header${open ? ' menu-open' : ''}`}>
     <a className="brand" href="/" aria-label="Altum Capital, inicio" onClick={() => setOpen(false)}><Brand dark={inner && !open} /></a>
     <nav className="desktop-nav" aria-label="Navegación principal">
-      {navigation.map((link) => <a key={link.href} href={link.href}>{link.label}</a>)}
+      {navigation.map((link) => <a key={link.href} href={link.href} aria-current={link.href === activeHref ? 'page' : undefined}>{link.label}</a>)}
     </nav>
     <button ref={toggle} type="button" className="menu-toggle" aria-controls="mobile-nav" aria-expanded={open}
       aria-label={open ? 'Cerrar menú' : 'Abrir menú'} disabled={!ready} onClick={() => setOpen(!open)}>
@@ -54,7 +56,7 @@ export default function Header({ inner = false }: { inner?: boolean }) {
     </button>
     <nav ref={menu} id="mobile-nav" className="mobile-nav" hidden={!open} aria-label="Navegación móvil">
       {navigation.map((link, index) =>
-        <a key={link.href} href={link.href} onClick={() => setOpen(false)}><small>0{index + 1}</small>{link.mobile}<span aria-hidden="true">↗</span></a>)}
+        <a key={link.href} href={link.href} aria-current={link.href === activeHref ? 'page' : undefined} onClick={() => setOpen(false)}><small>0{index + 1}</small>{link.mobile}<span aria-hidden="true">↗</span></a>)}
     </nav>
   </header>;
 }

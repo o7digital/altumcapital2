@@ -1,0 +1,7 @@
+---
+import { photograph } from '../../data/editorial/content';
+interface Props { name: string; alt?: string; class?: string; eager?: boolean; position?: string; }
+const { name, alt = '', class: className = '', eager = false, position = 'center' } = Astro.props;
+const asset = photograph(name);
+---
+<figure class:list={['ed-photo', className]} style={`--photo-position:${position}`}><img src={asset.local} data-source-src={asset.source} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async"/><slot/></figure>

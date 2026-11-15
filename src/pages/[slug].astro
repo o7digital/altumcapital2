@@ -1,8 +1,14 @@
 ---
-import SourcePage from '../components/SourcePage.astro';
+import AboutPage from '../components/editorial/AboutPage.astro';
+import ServicesPage from '../components/editorial/ServicesPage.astro';
+import TeamPage from '../components/editorial/TeamPage.astro';
+import InvestorsPage from '../components/editorial/InvestorsPage.astro';
+import ContactPage from '../components/editorial/ContactPage.astro';
+import NewsPage from '../components/editorial/NewsPage.astro';
+import DocumentPage from '../components/editorial/DocumentPage.astro';
+import ArticlePage from '../components/editorial/ArticlePage.astro';
 import source from '../data/source-pages.json';
-export function getStaticPaths() {
-  return source.pages.filter(page => page.slug).map(page => ({ params: { slug: page.slug } }));
-}
+export function getStaticPaths(){return source.pages.filter(page=>page.slug).map(page=>({params:{slug:page.slug}}));}
+const {slug}=Astro.params;
 ---
-<SourcePage slug={Astro.params.slug} />
+{slug==='about'?<AboutPage/>:slug==='soluciones-de-credito'?<ServicesPage/>:slug==='equipo'?<TeamPage/>:slug==='inversionistas'?<InvestorsPage/>:slug==='contact'?<ContactPage/>:slug==='blog'?<NewsPage/>:['legal','aviso-de-privacidad'].includes(slug!)?<DocumentPage slug={slug!}/>:<ArticlePage slug={slug!}/>}

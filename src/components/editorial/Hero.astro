@@ -1,0 +1,11 @@
+---
+interface Props { number: string; label: string; title: string; accent?: string; intro?: string; photo?: string; photoPosition?: string; wide?: boolean; }
+import Photo from './Photo.astro';
+const { number, label, title, accent, intro, photo, photoPosition = 'center', wide = false } = Astro.props;
+---
+<header class:list={['ed-hero', {'ed-hero--wide':wide}]}>
+  <div class="wrap"><div class="ed-overline"><a href="/">ALTUM CAPITAL</a><span>{number} / {label}</span></div>
+    <div class="ed-hero-composition"><h1>{title}{accent && <>{title && <br/>}<em>{accent}</em></>}</h1><div class="ed-hero-intro">{intro && <p>{intro}</p>}<span class="ed-line" aria-hidden="true"/></div></div>
+  </div>
+  {photo && <div class="ed-hero-image"><Photo name={photo} position={photoPosition} eager /></div>}
+</header>

@@ -1,0 +1,13 @@
+---
+import EditorialLayout from '../../layouts/EditorialLayout.astro';
+import Hero from './Hero.astro';
+import SectionHead from './SectionHead.astro';
+import { copy } from '../../data/editorial/content';
+import { uses } from '../../data/site';
+---
+<EditorialLayout slug="soluciones-de-credito" title="Soluciones de crédito" description={copy('soluciones-de-credito','Créditos a la medida')}>
+  <Hero number="02" label="SOLUCIONES DE CRÉDITO" title="Soluciones" accent="de crédito" intro={copy('soluciones-de-credito','Créditos a la medida')} photo="cabezal-soluciones.jpg"/>
+  <section class="ed-section"><div class="wrap"><SectionHead number="01" title="NUESTRAS SOLUCIONES"/><div class="ed-statement"><h2 data-editorial-reveal>Nuestras<br/><em>Soluciones</em></h2><p data-editorial-reveal>{copy('soluciones-de-credito','Ofrecemos créditos')}</p></div><ol class="ed-uses">{uses.map((item,index)=><li data-editorial-reveal><span>{String(index+1).padStart(2,'0')}</span><p>{item}</p></li>)}</ol></div></section>
+  <section class="ed-currency-section"><div class="wrap"><SectionHead number="02" title="ALTUM CAPITAL" note="MXN / USD"/><div class="ed-currency-layout"><article data-editorial-reveal><span class="ed-small">01 / MXN</span><h2>Altum Capital<br/><em>Pesos</em></h2><p>{copy('soluciones-de-credito','Enfoque de inversión en deuda privada en pesos')}</p><span class="ed-currency-word" aria-hidden="true">MXN</span></article><article data-editorial-reveal><span class="ed-small">02 / USD</span><h2>Altum Capital<br/><em>Dólares</em></h2><p>{copy('soluciones-de-credito','Enfoque de inversión en deuda privada en dólares')}</p><span class="ed-currency-word" aria-hidden="true">USD</span></article></div></div></section>
+  <section class="ed-section"><div class="wrap"><SectionHead number="03" title="SOMOS UN"/><div class="ed-statement"><h2 data-editorial-reveal>Socio Estratégico<br/><em>para tu empresa</em></h2><div data-editorial-reveal><p class="ed-body">Nuestros factores diferenciadores son</p><a class="ed-link" href="/about/#diferenciadores">Nuestra Firma <span aria-hidden="true">↗</span></a></div></div></div></section>
+</EditorialLayout>
