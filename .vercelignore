@@ -1,0 +1,11 @@
+.git/
+.astro/
+.vercel/
+.env*
+node_modules/
+dist/
+artifacts/
+test-results/
+playwright-report/
+docs/reference/
+.DS_Store
