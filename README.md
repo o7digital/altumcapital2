@@ -6,7 +6,7 @@ maquette sont conservés. Les sources originales sont dans `docs/reference/`.
 
 ## Développement
 
-Node.js ≥ 22.23.4 et npm sont requis.
+Node.js 26.x et npm sont requis.
 
 ```sh
 npm ci
