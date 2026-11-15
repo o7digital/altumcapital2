@@ -43,7 +43,7 @@ export default function ContactPanel() {
     <div className="dialog-inner">
       <button type="button" className="dialog-close" aria-label="Cerrar formulario" onClick={() => dialog.current?.close()}>×</button>
       <span className="eyebrow">EMPECEMOS UNA CONVERSACIÓN</span>
-      <h2 id="dialog-title">Lo que sigue<br /><em>comienza aquí.</em></h2>
+      <h2 id="dialog-title">Potencialicemos<br /><em>tu empresa.</em></h2>
       <p className="dialog-intro">Cuéntanos un poco sobre ti y prepararemos un correo para el equipo de Altum.</p>
       <form ref={form} id="inquiry-form" onSubmit={onSubmit}>
         <label>Me interesa<select name="purpose" defaultValue="financiamiento"><option value="financiamiento">Financiamiento para mi empresa</option><option value="inversion">Información para inversionistas</option></select></label>

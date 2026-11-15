@@ -1,0 +1,8 @@
+---
+import { site } from '../data/site';
+import content from '../data/imported.json';
+---
+<div class="team-layout">
+  <div class="team-copy"><span class="eyebrow">NUESTRO CAPITAL HUMANO</span><h2>Equipo especializado.<br/><em>Amplia experiencia.</em></h2><p>{site.teamIntro}</p><p>{site.teamDescription}</p><div class="team-numbers"><div><strong>40<span>+</span></strong><span>PERSONAS</span></div><div><strong>180<span>+</span></strong><span>AÑOS DE EXPERIENCIA ACUMULADA</span></div></div></div>
+  <figure class="team-photo"><img src={content.teamImage} width="1536" height="1025" alt="Colaboración en un proyecto. Fotografía del sitio de origen de Altum Capital." loading="lazy" decoding="async"/><figcaption>ALTUM CAPITAL / NUESTRO EQUIPO</figcaption></figure>
+</div>

@@ -7,15 +7,15 @@ function CreditContent({ currency }: { currency: Currency }) {
     <div className="credit-primary" aria-live="polite" aria-atomic="true">
       <span className="eyebrow">CRÉDITO PRIVADO / {currency}</span>
       <h3>{product.title}</h3><p className="credit-copy">{product.copy}</p>
-      <div className="credit-amount"><span>{product.range}</span><span className="currency-code">{currency}</span></div>
+      <div className="credit-amount"><span>{product.range || currency}</span>{product.range && <span className="currency-code">{currency}</span>}</div>
       <p className="credit-unit">{product.unit}</p>
-      <a className="text-link" href="#contacto" data-inquiry="financiamiento">Conversemos sobre tu proyecto <span aria-hidden="true">↗</span></a>
+      <a className="text-link" href="/#contacto" data-inquiry="financiamiento">Contáctanos <span aria-hidden="true">↗</span></a>
     </div>
     <div className="credit-details"><span className="eyebrow">ESTRUCTURADO A TU MEDIDA</span>
-      <dl><div><dt>Plazo de referencia</dt><dd>3 a 5 años</dd></div>
+      <dl><div><dt>Enfoque</dt><dd>{product.focus}</dd></div>
         <div><dt>Alcance</dt><dd>{product.geography}</dd></div>
         <div><dt>Dirigido a</dt><dd>{product.audience}</dd></div></dl>
-      <p className="small-note">Rangos publicados en el sitio institucional. Condiciones sujetas a análisis, aprobación y validación de vigencia. No constituye una oferta de crédito.</p>
+      <p className="small-note">Créditos flexibles y a la medida, principalmente con garantía fiduciaria. Condiciones sujetas a análisis y aprobación.</p>
     </div>
   </>;
 }

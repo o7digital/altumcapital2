@@ -1,5 +1,23 @@
 # Sources et statut du contenu
 
+## Contenu migré sur dev
+
+Le contenu éditorial est désormais celui de https://altumcapital.vercel.app/,
+récupéré à la demande du propriétaire le 14 novembre 2026. Les neuf articles et
+les deux documents légaux sont stockés dans `src/data/imported.json`, avec leurs
+URL source, dates et images. Les informations de présentation sont dans
+`src/data/site.ts` et les offres dans `src/data/products.ts`.
+
+Les adresses exactes des images importées et leurs chemins locaux sont dans
+`src/data/imported.json` (`assets`). Les images architecturales de la maquette
+restent conceptuelles. Le logo et le témoignage Apollo figurent sur la page
+investisseurs source ; aucun nouveau partenaire n’est inventé.
+
+Voir `docs/CONTENT_MIGRATION.md` pour les routes, les chiffres repris, le traitement
+des montants MXN/USD et la sauvegarde `backup` de l’ancien site. Les mentions
+légales sont maintenant accessibles localement, sans dépendre du certificat de
+`altumcapital.mx`.
+
 ## Référence fournie
 
 - `docs/reference/AltumCapital_V2_Preview.html` : composition, textes espagnols,
@@ -7,16 +25,16 @@
   et USD, interactions et images.
 - `docs/reference/INSTRUCTIONS.md` : consignes de reprise fournies avec la maquette.
 
-Le document décrit ces informations comme provenant du site institutionnel et
+La référence V2 initiale décrivait ces informations comme provenant du site institutionnel et
 signale des montants contradictoires selon ses pages. Elles n’ont pas fait l’objet
-d’une nouvelle validation institutionnelle dans ce projet. Aucune promesse de
-rendement n’est ajoutée. Les photos sont conceptuelles et ne représentent ni des
+d’une validation institutionnelle indépendante. Les chiffres actuels sont repris
+de la source Vercel demandée. Aucune promesse de rendement n’est ajoutée.
+Les photos architecturales sont conceptuelles et ne représentent ni des
 locaux, ni des actifs, ni des projets financés par Altum.
 
-Les liens institutionnels `/aviso-de-privacidad/` et `/legal/` ont été conservés.
-Lors du contrôle local, leur accès HTTPS a échoué avec une erreur de certificat
-sur le domaine externe `altumcapital.mx`. Leur accessibilité reste à vérifier
-côté site institutionnel ; aucune mention légale de remplacement n’est inventée.
+La version initiale pointait vers `altumcapital.mx`, dont le certificat échouait
+au contrôle local. La migration utilise les textes et documents de la copie
+Vercel fournie, sur les pages locales `/aviso-de-privacidad/` et `/legal/`.
 
 ## Photographies
 

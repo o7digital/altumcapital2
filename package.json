@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
     "assets": "node scripts/download-assets.mjs",
+    "content:import": "node scripts/import-content.mjs",
     "check": "astro check",
     "build": "astro build",
     "preview": "astro preview --host 127.0.0.1",

@@ -1,10 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Brand from './Brand';
-
-const links = [
-  ['firma', 'La firma'], ['soluciones', 'Financiamiento'],
-  ['inversionistas', 'Inversionistas'], ['enfoque', 'Nuestro enfoque'],
-] as const;
+import { navigation } from '../data/site';
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -37,7 +33,7 @@ export default function Header() {
         }
       }
     }
-    function onResize() { if (window.innerWidth > 900) setOpen(false); }
+    function onResize() { if (window.innerWidth > 1024) setOpen(false); }
     document.addEventListener('keydown', onKey);
     window.addEventListener('resize', onResize);
     return () => {
@@ -48,20 +44,20 @@ export default function Header() {
   }, [open]);
 
   return <header ref={header} className={`site-header${open ? ' menu-open' : ''}`}>
-    <a className="brand" href="#inicio" aria-label="Altum Capital, inicio" onClick={() => setOpen(false)}><Brand /></a>
+    <a className="brand" href="/#inicio" aria-label="Altum Capital, inicio" onClick={() => setOpen(false)}><Brand /></a>
     <nav className="desktop-nav" aria-label="Navegación principal">
-      {links.map(([id, label]) => <a key={id} href={`#${id}`}>{label}</a>)}
+      {navigation.map((link) => <a key={link.href} href={link.href}>{link.label}</a>)}
     </nav>
-    <a className="header-contact" href="#contacto">Conversemos <span aria-hidden="true">↗</span></a>
+    <a className="header-contact" href="/#contacto">Contáctanos <span aria-hidden="true">↗</span></a>
     <button ref={toggle} type="button" className="menu-toggle" aria-controls="mobile-nav" aria-expanded={open}
       aria-label={open ? 'Cerrar menú' : 'Abrir menú'} disabled={!ready} onClick={() => setOpen(!open)}>
       <span /><span />
     </button>
     <nav ref={menu} id="mobile-nav" className="mobile-nav" hidden={!open} aria-label="Navegación móvil">
-      <span className="eyebrow">UNA PERSPECTIVA DIFERENTE</span>
-      {[...links, ['contacto', 'Conversemos']].map(([id, label], index) =>
-        <a key={id} href={`#${id}`} onClick={() => setOpen(false)}><small>0{index + 1}</small>{label}<span aria-hidden="true">↗</span></a>)}
-      <p>Capital privado. Visión de largo plazo.</p>
+      <span className="eyebrow">DEUDA PRIVADA / MÉXICO Y LATINOAMÉRICA</span>
+      {[...navigation, { href: '/#contacto', mobile: 'Contacto' }].map((link, index) =>
+        <a key={link.href} href={link.href} onClick={() => setOpen(false)}><small>0{index + 1}</small>{link.mobile}<span aria-hidden="true">↗</span></a>)}
+      <p>Financiamiento en MXN y USD.</p>
     </nav>
   </header>;
 }

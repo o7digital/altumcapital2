@@ -1,0 +1,12 @@
+---
+import content from '../data/imported.json';
+interface Props { limit?: number; }
+const { limit = content.posts.length } = Astro.props;
+---
+<div class="news-list">
+  {content.posts.slice(0, limit).map((post, index) => <article class="news-row">
+    <a href={`/${post.slug}/`} class="news-image" tabindex="-1" aria-hidden="true"><img src={post.image} width="320" height="220" alt="" loading="lazy" decoding="async"/></a>
+    <div><span class="eyebrow">{post.date || 'NOTICIAS'} <span aria-hidden="true">/ {String(index + 1).padStart(2, '0')}</span></span><h3><a href={`/${post.slug}/`}>{post.title}</a></h3><p>{post.excerpt}</p></div>
+    <a class="news-arrow" href={`/${post.slug}/`} aria-label={`Leer: ${post.title}`}>↗</a>
+  </article>)}
+</div>

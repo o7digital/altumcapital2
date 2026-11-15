@@ -1,13 +1,15 @@
 export const products = {
   MXN: {
-    tab: 'Capital en pesos', title: 'El impulso que tu empresa necesita.', range: '75—250', unit: 'millones de pesos',
-    geography: 'México', audience: 'Empresas, instituciones financieras no bancarias y fondos de capital privado.',
-    copy: 'Estructuramos financiamiento en moneda local alrededor de las necesidades, los activos y la siguiente etapa de tu negocio.',
+    tab: 'Capital en pesos', title: 'Altum Capital Pesos', range: '75—500', unit: 'millones de pesos',
+    geography: 'México y Latinoamérica', audience: 'Pymes, Instituciones Financieras no Bancarias y Fondos de Capital Privado.',
+    focus: 'Todas las industrias y sectores con activos fácilmente monetizables.',
+    copy: 'Enfoque de inversión en deuda privada en pesos mediante el otorgamiento de crédito estructurado a todas las industrias y sectores con activos fácilmente monetizables.',
   },
   USD: {
-    tab: 'Capital en dólares', title: 'Una visión que cruza fronteras.', range: '5—20', unit: 'millones de dólares',
-    geography: 'México y Latinoamérica', audience: 'Empresas con ingresos referenciados en dólares y visión de crecimiento internacional.',
-    copy: 'Financiamiento en dólares para acompañar oportunidades de crecimiento y necesidades de capital de empresas con ingresos en esta moneda.',
+    tab: 'Capital en dólares', title: 'Altum Capital Dólares', range: '', unit: 'crédito estructurado en dólares',
+    geography: 'México y Latinoamérica', audience: 'Pymes, Instituciones Financieras no Bancarias y Fondos de Capital Privado.',
+    focus: 'Todas las industrias y sectores con ingresos referenciados a dólares.',
+    copy: 'Enfoque de inversión en deuda privada en dólares mediante el otorgamiento de crédito estructurado a todas las industrias y sectores con ingresos referenciados a dólares.',
   },
 } as const;
 export type Currency = keyof typeof products;

@@ -1,0 +1,13 @@
+---
+import { navigation, offices, site } from '../data/site';
+---
+<footer class="site-footer"><div class="wrap">
+  <div class="footer-top">
+    <a class="brand footer-brand" href="/#inicio" aria-label="Altum Capital, volver al inicio"><svg viewBox="0 0 42 40" aria-hidden="true"><path d="M3 34 21 4l18 30M12 21h18M10 34l11-18 11 18"/></svg><span class="brand-type">ALTUM<span>CAPITAL</span></span></a>
+    <p>Deuda privada.<br/><em>Crédito a la medida.</em></p>
+    <div><span class="eyebrow">CONTÁCTANOS</span><a href={`mailto:${site.email}`}>{site.email}</a>{offices.map((office) => <a href={`tel:${office.tel}`}>{office.short}: {office.phone}</a>)}</div>
+  </div>
+  <nav class="footer-nav" aria-label="Navegación secundaria">{navigation.map((link) => <a href={link.href}>{link.mobile}</a>)}<a href="/#inicio" class="back-top">Volver arriba <span aria-hidden="true">↑</span></a></nav>
+  <div class="footer-bottom"><span>© {new Date().getFullYear()} Altum Capital. Todos los derechos reservados.</span><div><a href="/aviso-de-privacidad/">Aviso de privacidad</a><a href="/legal/">Legal</a><a href={site.instagram} target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href={site.youtube} target="_blank" rel="noopener noreferrer">YouTube ↗</a></div><span>CONCEPTO / o7 DIGITAL</span></div>
+  <p class="concept-note">Propuesta de rediseño. Las fotografías arquitectónicas son conceptuales y no representan oficinas, activos ni proyectos financiados por Altum.</p>
+</div></footer>

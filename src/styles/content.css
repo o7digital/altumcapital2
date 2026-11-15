@@ -1,0 +1,204 @@
+/* The imported content follows the established Perspectiva composition. */
+.hero h1{font-size:clamp(78px,8.6vw,148px)}
+.hero h1 em{font-size:1.12em}
+.desktop-nav{gap:clamp(16px,2vw,32px)}
+.all-solutions{margin-top:28px}
+.investor-more{display:flex;gap:28px;align-items:center;margin-top:24px;font-size:12px;width:fit-content;border-bottom:1px solid #87977b;padding-bottom:8px}
+.investor-partner{padding-top:15px;min-width:0}
+.investor-partner>.eyebrow{color:#b9c3ae;font-size:8px}
+.investor-partner img{margin-top:30px;max-width:100%;height:auto;mix-blend-mode:screen;filter:grayscale(1)}
+.investor-partner blockquote{margin:28px 0 0;padding-top:28px;border-top:1px solid #ffffff30;font-size:14px;line-height:1.9;color:#d1d8c7}
+blockquote cite{display:block;margin-top:22px;font-size:10px;font-style:normal;letter-spacing:.04em}
+.team-section{border-block:1px solid var(--line);background:#e8eadf}
+.team-layout{display:grid;grid-template-columns:1fr 1fr;gap:8%;align-items:center}
+.team-copy h2,.news-heading h2,.detail-split h2,.metrics-section h2,.detail-differences>h2,.credit-uses h2,.investor-history h2{font-size:clamp(36px,3.6vw,62px);line-height:1.15;letter-spacing:-.055em}
+.team-copy h2{margin:26px 0}
+.team-copy h2 em,.news-heading h2 em,.detail-split h2 em,.metrics-section h2 em,.detail-differences h2 em,.credit-uses h2 em,.investor-history h2 em{color:#68775c}
+.team-copy>p{font-size:14px;color:#65705d;line-height:1.9;max-width:510px;margin-bottom:18px}
+.team-numbers{display:flex;gap:45px;border-top:1px solid #bcc5b0;margin-top:32px;padding-top:22px}
+.team-numbers>div{display:flex;flex-direction:column;max-width:180px}
+.team-numbers strong{font-size:72px;font-weight:350;letter-spacing:-.065em;line-height:1.2;white-space:nowrap}
+.team-numbers strong span{font-size:.55em}
+.team-numbers>div>span{font-size:8px;letter-spacing:.1em;line-height:1.8;margin-top:8px;color:#627056}
+.team-photo{position:relative;min-width:0}
+.team-photo img{width:100%;height:100%;aspect-ratio:1/1.06;object-fit:cover;filter:grayscale(.9) sepia(.15)}
+.team-photo figcaption{font-size:8px;letter-spacing:.12em;margin-top:15px;color:#68775c}
+.team-section .text-link{margin-top:38px}
+.news-section{background:var(--white)}
+.news-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:35px;margin-bottom:50px}
+.news-heading>p{max-width:310px;font-size:14px;color:#68775c;line-height:1.9}
+.news-row{display:grid;grid-template-columns:190px minmax(0,1fr) 35px;gap:35px;padding:35px 0;border-top:1px solid var(--line);align-items:center}
+.news-row:last-child{border-bottom:1px solid var(--line)}
+.news-image{display:block;overflow:hidden}
+.news-image img{width:100%;height:auto;aspect-ratio:1.45;object-fit:cover;filter:grayscale(.7) sepia(.1);transition:filter .3s,transform .3s}
+.news-row:hover img{filter:grayscale(0);transform:scale(1.025)}
+.news-row .eyebrow{color:#69775e;font-size:9px}
+.news-row h3{font-size:clamp(21px,2vw,31px);line-height:1.3;letter-spacing:-.04em;margin-top:12px;max-width:880px}
+.news-row p{font-size:12px;line-height:1.8;color:#6a7561;margin-top:14px;max-width:790px}
+.news-arrow{font-size:30px;justify-self:end;padding:10px 0}
+.news-section>.wrap>.text-link{margin-top:35px}
+.contact-offices{display:grid;grid-template-columns:1fr 1fr 1fr;gap:50px;margin-top:45px;padding-top:35px;border-top:1px solid #bfc8b2}
+.contact-offices>div{display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+.contact-offices .eyebrow{font-size:8px;color:#5c6b50;margin-bottom:17px}
+.contact-offices address,.contact-offices p{font-size:13px;font-style:normal;line-height:1.9;color:#5b6a50;max-width:285px}
+.contact-offices a{font-size:13px;line-height:1.7;border-bottom:1px solid #a8b599;margin-top:18px;overflow-wrap:anywhere}
+.contact-offices>div:last-child>a{margin-top:0;margin-bottom:18px}
+.institutional-notice{border-top:1px solid #bfc8b2;margin-top:40px;padding-top:25px;display:grid;grid-template-columns:1fr 3fr;gap:30px}
+.institutional-notice>.eyebrow{font-size:8px;color:#536348}
+.institutional-notice p{font-size:11px;line-height:1.9;color:#59674e;max-width:900px}
+.footer-nav{flex-wrap:wrap}
+.footer-bottom>div{flex-wrap:wrap}
+.mobile-nav{color:var(--paper)}
+.inner-page .site-header{position:relative;left:auto;right:auto;margin-inline:var(--gutter);color:var(--ink);border-color:var(--line)}
+.inner-page .menu-open{color:var(--paper)}
+.inner-page .menu-toggle span{background:var(--ink)}
+.inner-page .menu-open .menu-toggle span{background:var(--paper)}
+.inner-page .header-contact{border-color:#8d9a80}
+.detail-main{padding-bottom:100px}
+.page-intro{padding:80px 0 65px;border-bottom:1px solid var(--line);margin-bottom:65px;max-width:100%}
+.page-back{color:#67765c;display:inline-block;margin-bottom:36px;padding:8px 0}
+.page-intro h1{font-size:clamp(52px,7.1vw,110px);line-height:1.08;letter-spacing:-.065em;max-width:1250px;overflow-wrap:break-word}
+.page-intro>p{font-size:16px;line-height:1.9;color:#65745b;max-width:650px;margin-top:30px}
+.page-intro--article h1{font-size:clamp(36px,4.5vw,76px);letter-spacing:-.05em;max-width:1150px}
+.article-meta{display:flex;gap:30px;color:#6b795f;font-size:11px;margin-top:30px}
+.detail-split{display:grid;grid-template-columns:1fr 1fr;gap:10%;margin-block:80px}
+.detail-split>.eyebrow,.detail-split>div>.eyebrow{display:block;font-size:9px;color:#718064;margin-bottom:25px}
+.detail-copy{font-size:15px;color:#65715b;line-height:1.9;min-width:0}
+.detail-copy>p{margin-bottom:22px}
+.detail-copy .text-link{color:var(--ink)}
+.detail-copy .button{color:var(--paper);margin-top:25px}
+.detail-copy blockquote{margin:0;border-left:1px solid #a5b298;padding-left:28px;color:var(--ink)}
+.apollo-mark{max-width:100%;height:auto;margin-bottom:35px;mix-blend-mode:multiply;filter:grayscale(1)}
+.metrics-section{padding-block:65px;border-block:1px solid var(--line)}
+.metric-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:40px 35px;margin-block:45px}
+.metric-list>div{border-bottom:1px solid var(--line);padding-bottom:25px;min-width:0}
+.metric-list dd{font-size:clamp(35px,3.3vw,58px);font-weight:350;letter-spacing:-.06em;margin:0;line-height:1.3;white-space:nowrap}
+.metric-list dt{font-size:11px;color:#66755b;margin-top:10px;line-height:1.8}
+.detail-differences{display:grid;grid-template-columns:1fr 1fr;gap:10%;margin-top:80px}
+.credit-uses{padding-block:65px;border-top:1px solid var(--line)}
+.credit-uses>p{margin-top:25px;font-size:14px;color:#66755b}
+.credit-uses ol{list-style:none;margin:35px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:0 55px}
+.credit-uses li{display:flex;gap:25px;align-items:baseline;border-top:1px solid var(--line);padding:22px 0;font-size:17px;line-height:1.6}
+.credit-uses li>span{font-size:9px;color:#748468;flex-shrink:0}
+.investor-history{display:grid;grid-template-columns:1fr 1fr;gap:10%;border-top:1px solid var(--line);padding-top:65px}
+.contact-page-action{margin-top:35px}
+.article-content{max-width:1050px;margin-inline:auto}
+.article-cover{width:100%;height:auto;max-height:620px;object-fit:cover;margin-bottom:60px;filter:grayscale(.3)}
+.prose{font-size:16px;line-height:1.95;color:#56654d;overflow-wrap:anywhere;max-width:860px;margin-inline:auto}
+.prose p{margin-bottom:24px}
+.prose img{display:block;max-width:100%;height:auto;margin:35px auto}
+.prose h2,.prose h3{color:var(--ink);font-size:clamp(23px,2.4vw,35px);line-height:1.3;letter-spacing:-.04em;margin:40px 0 25px}
+.prose h3{font-size:22px}
+.prose ul,.prose ol{padding-left:24px;margin-block:25px}
+.prose li{padding-left:6px;margin-bottom:12px}
+.prose a{border-bottom:1px solid #7c8b6f;color:var(--ink)}
+.prose blockquote{border-left:1px solid #879978;padding-left:28px;margin:35px 0;font-family:var(--serif);font-style:italic;font-size:25px;line-height:1.6}
+.prose table{display:block;overflow:auto;max-width:100%;border-collapse:collapse}
+.prose td,.prose th{padding:15px;border:1px solid var(--line)}
+.legal-content{max-width:1000px}
+.legal-content>ul>li{margin-block:30px}
+.article-navigation{margin-top:60px;padding-top:25px;border-top:1px solid var(--line)}
+
+@media(max-width:1100px){
+  .team-layout{gap:6%}
+  .team-copy h2{font-size:36px}
+  .team-copy>p{font-size:13px}
+  .team-numbers{gap:30px}
+  .team-numbers strong{font-size:60px}
+  .news-row{grid-template-columns:150px minmax(0,1fr) 25px;gap:25px}
+  .contact-offices{gap:30px}
+}
+@media(max-width:1024px){
+  .desktop-nav,.header-contact{display:none}
+  .site-header{height:94px}
+  .menu-toggle{display:flex;position:relative;z-index:102;width:44px;height:44px;background:none;flex-direction:column;justify-content:center;gap:7px;padding:8px}
+  .menu-toggle span{display:block;width:27px;height:1px;background:var(--paper);transition:transform .25s}
+  .mobile-nav{display:flex;position:fixed;inset:0;z-index:101;background:#222c23;flex-direction:column;padding:120px var(--gutter) 30px;overflow:auto}
+  .mobile-nav>a{padding-block:10px}
+  .no-js-nav{display:flex}
+  .investor-partner blockquote{font-size:13px;line-height:1.85}
+  .team-layout{align-items:start}
+  .team-copy h2{font-size:30px}
+  .team-numbers strong{font-size:48px}
+  .team-numbers{gap:25px}
+  .contact-offices{grid-template-columns:1fr 1fr;gap:35px}
+  .contact-offices>div:last-child{grid-column:1/-1}
+  .contact-offices>div:last-child p{max-width:530px}
+  .detail-split,.detail-differences,.investor-history{gap:7%}
+  .metric-list{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:900px){
+  .hero h1{font-size:11vw}
+  .news-row{grid-template-columns:130px minmax(0,1fr) 24px;gap:22px}
+  .news-heading>p{font-size:12px;max-width:245px}
+  .page-intro{padding-top:65px;margin-bottom:50px}
+  .detail-copy,.prose{font-size:14px}
+  .page-intro h1{font-size:8vw}
+  .page-intro--article h1{font-size:5.8vw}
+  .detail-split h2,.detail-differences>h2,.investor-history h2{font-size:36px}
+}
+@media(max-width:600px){
+  .hero h1{font-size:11.3vw}
+  .site-header{height:88px}
+  .mobile-nav{padding-top:110px}
+  .mobile-nav>.eyebrow{margin-bottom:24px}
+  .mobile-nav>p{padding-top:25px}
+  .investor-partner{padding-top:0}
+  .investor-partner img{width:160px;margin-top:24px}
+  .investor-partner blockquote{font-size:13px;padding-top:24px}
+  .investor-layout h2 em{white-space:normal}
+  .team-layout{grid-template-columns:1fr;gap:35px}
+  .team-copy h2{font-size:9vw}
+  .team-copy>p{font-size:13px}
+  .team-photo img{aspect-ratio:1.1}
+  .team-numbers{gap:35px}
+  .team-numbers strong{font-size:64px}
+  .team-numbers>div>span{font-size:7px;max-width:130px}
+  .news-heading{display:block;margin-bottom:35px}
+  .news-heading h2{font-size:11vw}
+  .news-heading>p{margin-top:25px;font-size:13px;max-width:310px}
+  .news-row{grid-template-columns:80px minmax(0,1fr);gap:18px;padding-block:25px;align-items:start}
+  .news-row h3{font-size:19px;line-height:1.35;margin-top:10px}
+  .news-row p{font-size:11px;margin-top:12px}
+  .news-row .eyebrow{font-size:7px;letter-spacing:.08em}
+  .news-row .eyebrow>span{display:none}
+  .news-image img{aspect-ratio:.8}
+  .news-arrow{display:none}
+  .contact-offices{grid-template-columns:1fr;gap:32px;margin-top:30px;padding-top:28px}
+  .contact-offices>div:last-child{grid-column:auto}
+  .contact-offices address,.contact-offices p,.contact-offices a{font-size:13px}
+  .contact-offices .eyebrow{font-size:8px;margin-bottom:12px}
+  .institutional-notice{grid-template-columns:1fr;gap:15px;margin-top:30px;padding-top:25px}
+  .institutional-notice p{font-size:10px}
+  .institutional-notice>.eyebrow{font-size:7px}
+  .footer-bottom>div{gap:15px 20px;font-size:9px}
+  .page-intro{padding:55px 0 40px;margin-bottom:40px}
+  .page-back{font-size:8px;margin-bottom:25px}
+  .page-intro h1{font-size:12vw}
+  .page-intro--article h1{font-size:10vw}
+  .page-intro>p{font-size:13px;margin-top:25px}
+  .detail-main{padding-bottom:65px}
+  .detail-split,.detail-differences,.investor-history{grid-template-columns:1fr;gap:35px;margin-block:45px}
+  .detail-split h2,.detail-differences>h2,.investor-history h2,.metrics-section h2,.credit-uses h2{font-size:10vw}
+  .detail-copy{font-size:13px}
+  .detail-copy blockquote{padding-left:20px}
+  .metric-list{grid-template-columns:1fr 1fr;gap:25px 20px;margin-block:35px}
+  .metric-list dd{font-size:10vw}
+  .metric-list dt{font-size:10px}
+  .metrics-section{padding-block:40px}
+  .credit-uses{padding-block:40px}
+  .credit-uses>p{font-size:13px}
+  .credit-uses ol{grid-template-columns:1fr}
+  .credit-uses li{font-size:15px;gap:20px}
+  .article-meta{flex-wrap:wrap;gap:12px 25px;font-size:10px}
+  .article-cover{margin-bottom:35px}
+  .prose{font-size:14px;line-height:1.9}
+  .prose h2,.prose h3{font-size:24px}
+  .prose blockquote{font-size:23px;padding-left:20px}
+}
+@media(max-width:375px){
+  .team-numbers{gap:30px}
+  .team-numbers strong{font-size:55px}
+  .news-row{grid-template-columns:65px minmax(0,1fr);gap:15px}
+  .news-row h3{font-size:17px}
+}

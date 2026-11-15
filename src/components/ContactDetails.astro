@@ -1,0 +1,11 @@
+---
+import { offices, site } from '../data/site';
+---
+<div class="contact-offices">
+  {offices.map((office) => <div>
+    <span class="eyebrow">{office.city}</span>
+    <address>{office.address}</address>
+    <a href={`tel:${office.tel}`}>{office.short}: {office.phone}</a>
+  </div>)}
+  <div><span class="eyebrow">PARA MÁS INFORMACIÓN</span><a href={`mailto:${site.email}`}>{site.email}</a><p>{site.contactIntro}</p></div>
+</div>

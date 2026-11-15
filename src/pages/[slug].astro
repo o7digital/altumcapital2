@@ -1,0 +1,67 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import ContactDetails from '../components/ContactDetails.astro';
+import CreditExplorer from '../components/CreditExplorer';
+import NewsList from '../components/NewsList.astro';
+import TeamContent from '../components/TeamContent.astro';
+import content from '../data/imported.json';
+import { differentiators, metrics, site, uses } from '../data/site';
+
+export function getStaticPaths() {
+  return ['about', 'soluciones-de-credito', 'equipo', 'inversionistas', 'contact', 'blog',
+    ...content.documents.map((entry) => entry.slug), ...content.posts.map((entry) => entry.slug)]
+    .map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+const post = content.posts.find((entry) => entry.slug === slug);
+const document = content.documents.find((entry) => entry.slug === slug);
+const titles: Record<string, string> = { about: 'Nuestra firma', 'soluciones-de-credito': 'Soluciones de crédito', equipo: 'Nuestro equipo', inversionistas: 'Inversionistas', contact: 'Contacto', blog: 'Noticias' };
+const descriptions: Record<string, string> = {
+  about: 'Conoce más acerca de Altum Capital y todo lo que hacemos.',
+  'soluciones-de-credito': site.creditIntro,
+  equipo: 'Equipo especializado con amplia experiencia en deuda.',
+  inversionistas: 'Nuestros inversionistas refuerzan su confianza en nosotros.',
+  contact: site.contactIntro,
+  blog: 'Conoce acerca de nuestra presencia y de la de nuestros clientes en los medios.',
+};
+const title = post?.title || document?.title || titles[slug!];
+const description = post?.excerpt || descriptions[slug!] || '';
+---
+<SiteLayout title={`${title} — Altum Capital`} description={description || site.description} inner>
+  <main id="main" class="detail-main">
+    <div class="wrap">
+      <header class:list={['page-intro', { 'page-intro--article': post || document }]}>
+        <a class="eyebrow page-back" href={post ? '/blog/' : '/'}>← {post ? 'TODAS LAS NOTICIAS' : 'ALTUM CAPITAL'}</a>
+        <h1>{title}</h1>{description && <p>{description}</p>}
+        {post && <div class="article-meta"><span>{post.date}</span>{post.author && <span>Por {post.author}</span>}</div>}
+      </header>
+
+      {slug === 'about' && <>
+        <div class="detail-split"><div><span class="eyebrow">NUESTRO OBJETIVO</span><h2>Deuda privada.<br/><em>Servicio personalizado.</em></h2></div><div class="detail-copy"><p>{site.objective}</p><p>Ofrecemos soluciones de crédito a través de una estructuración enfocada a las necesidades de nuestros clientes.</p><a class="text-link" href="/soluciones-de-credito/">Nuestras soluciones <span aria-hidden="true">↗</span></a></div></div>
+        <section class="metrics-section" aria-labelledby="metrics-title"><h2 id="metrics-title">Altum Capital <em>en números.</em></h2><dl class="metric-list">{metrics.map((metric) => <div><dd>{metric.value}</dd><dt>{metric.label}</dt></div>)}</dl><p class="small-note">Cifras publicadas en el sitio de origen de Altum Capital.</p></section>
+        <section class="detail-differences"><h2>¿En qué <em>nos diferenciamos?</em></h2><div class="approach-rows">{differentiators.map((item, index) => <details open={index === 0}><summary><span>0{index + 1}</span><h3>{item.title}</h3><i aria-hidden="true"/></summary><div class="detail-body"><p>{item.copy}</p></div></details>)}</div></section>
+      </>}
+
+      {slug === 'soluciones-de-credito' && <>
+        <CreditExplorer client:load />
+        <section class="credit-uses"><h2>Nuestras <em>soluciones.</em></h2><p>Ofrecemos créditos estructurados senior para los siguientes usos de los recursos:</p><ol>{uses.map((use, index) => <li><span aria-hidden="true">0{index + 1}</span>{use}</li>)}</ol></section>
+        <div class="detail-split"><h2>Un socio estratégico<br/><em>para tu empresa.</em></h2><div class="detail-copy">{differentiators.map((item) => <p>{item.copy}</p>)}</div></div>
+      </>}
+
+      {slug === 'equipo' && <TeamContent />}
+
+      {slug === 'inversionistas' && <>
+        <div class="detail-split"><div><span class="eyebrow">SOCIOS ESTRATÉGICOS</span><h2>De alto<br/><em>calibre.</em></h2></div><div class="detail-copy"><p>{site.partnersIntro}</p><img class="apollo-mark" src={content.apolloImage} width="200" height="90" alt="Apollo Investment Corporation"/><blockquote>{site.apolloQuote}<cite>Apollo Investment Corporation</cite></blockquote></div></div>
+        <section class="investor-history"><h2>¿Por qué invertir<br/><em>en Altum Capital?</em></h2><div class="detail-copy"><p>{site.investorHistory}</p><p class="small-note">Información histórica publicada por Altum Capital. Los rendimientos pasados no garantizan rendimientos futuros.</p><a class="text-link" href={site.investorUrl} target="_blank" rel="noopener noreferrer">Información para inversionistas / BIVA <span aria-hidden="true">↗</span></a><a class="button button-dark" href="mailto:contacto@altumcapital.com.mx" data-inquiry="inversion">Contáctanos <span aria-hidden="true">↗</span></a></div></section>
+      </>}
+
+      {slug === 'contact' && <><ContactDetails /><div class="contact-page-action"><a class="button button-dark" href={`mailto:${site.email}`} data-inquiry="financiamiento">Contáctanos <span aria-hidden="true">↗</span></a></div><aside class="institutional-notice"><span class="eyebrow">AVISO IMPORTANTE</span><p>{site.notice}</p></aside></>}
+
+      {slug === 'blog' && <NewsList />}
+
+      {post && <article class="article-content"><img class="article-cover" src={post.image} width="1200" height="720" alt={post.title}/><div class="prose" set:html={post.html}/><nav class="article-navigation" aria-label="Más noticias"><a class="text-link" href="/blog/">Todas las noticias <span aria-hidden="true">↗</span></a></nav></article>}
+      {document && <article class="prose legal-content" set:html={document.html}/>}
+    </div>
+  </main>
+</SiteLayout>
