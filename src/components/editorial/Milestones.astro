@@ -1,0 +1,7 @@
+---
+import {milestones} from '../../data/editorial/narrative';
+interface Props {years?:string[];}
+const {years}=Astro.props;
+const items=milestones.filter(item=>!years||years.includes(item.year));
+---
+<ol class="ed-timeline">{items.map(item=><li><span class="ed-timeline-year">{item.year}</span><div><h3>{item.title}</h3><p>{item.text}</p><a href={`/${item.slug}/`}>Publicación del {item.date} <span aria-hidden="true">↗</span></a></div></li>)}</ol>

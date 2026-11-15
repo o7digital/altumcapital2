@@ -28,4 +28,12 @@ et sur la branche `backup`. Elles ne constituent plus la source éditoriale du s
 Depuis la refonte éditoriale du 15 novembre 2026, cette archive sert de référence
 pour la conservation du contenu. Les pages internes ne réutilisent plus ses
 structures HTML ni ses mises en page : voir `docs/EDITORIAL_REDESIGN.md`.
-La homepage reste la référence visuelle protégée par comparaison des captures.
+La palette et les typographies de la homepage restent la référence visuelle.
+Après les captures signalées par Olivier, celui-ci a expressément autorisé la
+correction des proportions et des grands vides de la homepage également.
+Les synthèses historiques de `narrative.ts` renvoient aux publications du clone
+sur les dix ans de la firme (2024), la troisième émission BIVA (2024) et le prêt
+vert NADBank (2025). Les six descriptions de solutions expliquent les usages
+déjà énumérés par le client sans introduire de nouvelles conditions de crédit.
+Les extraits des trois actualités principales sont rédigés en phrases complètes,
+avec leur date, au lieu de fragments interrompus automatiquement.

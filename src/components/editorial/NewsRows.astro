@@ -1,7 +1,8 @@
 ---
 import posts from '../../data/editorial/prose.json';
+import { articleSummaries } from '../../data/editorial/narrative';
 interface Props { exclude?: string; limit?: number; }
 const { exclude, limit = 9 } = Astro.props;
 const articles=posts.filter(post=>post.date&&post.slug!==exclude).slice(0,limit);
 ---
-<div class="ed-news-list">{articles.map((post,index)=><article class="ed-news-row" data-editorial-reveal><a class="ed-news-image" href={`/${post.slug}/`} tabindex="-1" aria-hidden="true">{post.thumbnail&&<img src={post.thumbnail.local} data-source-src={post.thumbnail.source} alt="" loading="lazy" decoding="async"/>}</a><div class="ed-news-copy"><span class="ed-small">{post.date}</span><h3><a href={`/${post.slug}/`}>{post.title}</a></h3><p>{post.excerpt}</p><a class="ed-link" href={`/${post.slug}/`}>Leer más <span aria-hidden="true">↗</span></a></div><span class="ed-news-index" aria-hidden="true">{String(index+1).padStart(2,'0')}</span></article>)}</div>
+<div class="ed-news-list">{articles.map((post,index)=><article class="ed-news-row" data-editorial-reveal><a class="ed-news-image" href={`/${post.slug}/`} tabindex="-1" aria-hidden="true">{post.thumbnail&&<img src={post.thumbnail.local} data-source-src={post.thumbnail.source} alt="" loading="lazy" decoding="async"/>}</a><div class="ed-news-copy"><span class="ed-small">{post.date}</span><h3><a href={`/${post.slug}/`}>{post.title}</a></h3><p>{articleSummaries[post.slug] || post.excerpt}</p><a class="ed-link" href={`/${post.slug}/`}>Leer más <span aria-hidden="true">↗</span></a></div><span class="ed-news-index" aria-hidden="true">{String(index+1).padStart(2,'0')}</span></article>)}</div>

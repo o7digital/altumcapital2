@@ -5,17 +5,22 @@ import Photo from './Photo.astro';
 import SectionHead from './SectionHead.astro';
 import Statistics from './Statistics.astro';
 import Principles from './Principles.astro';
-import { about } from '../../data/editorial/content';
+import Milestones from './Milestones.astro';
+import { about, copy } from '../../data/editorial/content';
+import { site } from '../../data/site';
 ---
 <EditorialLayout slug="about" title="Nuestra Firma" description={about.intro}>
-  <Hero number="01" label="NUESTRA FIRMA" title="Nuestra" accent="Firma" intro={about.intro} photo="sobre-altum-capital.jpg"/>
-  <section class="ed-section"><div class="wrap"><SectionHead number="01" title="NUESTRO OBJETIVO"/>
-    <div class="ed-statement"><h2 data-editorial-reveal>Nuestro<br/><em>Objetivo</em></h2><p data-editorial-reveal>{about.objective}</p></div>
-    <div class="ed-diptych" data-editorial-reveal><Photo name="sobre-altum-capital-objetivo.jpg"/><Photo name="about-us.jpg"/></div>
+  <Hero number="01" label="NUESTRA FIRMA" title="Nuestra" accent="Firma" intro={about.intro} photo="sobre-altum-capital.jpg">
+    <p class="ed-hero-detail">{site.description}</p>
+  </Hero>
+  <nav class="ed-page-index wrap" aria-label="En esta página"><span>NUESTRA FIRMA</span><a href="#objetivo">Nuestro objetivo ↓</a><a href="#cifras">En números ↓</a><a href="#diferenciadores">Nuestra forma de trabajar ↓</a></nav>
+  <section class="ed-section" id="objetivo"><div class="wrap"><SectionHead number="01" title="NUESTRO OBJETIVO"/>
+    <div class="ed-feature"><div class="ed-feature-copy"><h2>Deuda privada con<br/><em>visión de largo plazo</em></h2><p class="ed-body">{about.objective}</p><p class="ed-body">{about.activity}</p><a class="ed-link" href="/soluciones-de-credito/">Soluciones de crédito <span aria-hidden="true">↗</span></a></div><div class="ed-compact-diptych"><Photo name="sobre-altum-capital-objetivo.jpg"/><Photo name="about-us.jpg"/></div></div>
   </div></section>
-  <Statistics items={about.metrics}/>
-  <section class="ed-section"><div class="wrap"><SectionHead number="03" title="¿QUÉ HACEMOS?"/>
-    <div class="ed-activity"><div data-editorial-reveal><p class="ed-lead">{about.activity}</p><a class="ed-link" href="/soluciones-de-credito/">Soluciones de crédito <span aria-hidden="true">↗</span></a><Photo name="nuestra-firma.jpg" class="ed-inset-image"/></div><div class="ed-photo-column" data-editorial-reveal><Photo name="QUE-HACEMOS-ALTUM.jpg"/><Photo name="QUE-HACEMOS.jpg"/></div></div>
+  <div id="cifras"><Statistics items={about.metrics}/></div>
+  <section class="ed-section" id="diferenciadores"><div class="wrap"><SectionHead number="03" title="¿QUÉ HACEMOS?"/>
+    <div class="ed-feature ed-feature--principles"><div class="ed-feature-copy"><h2>¿En qué<br/><em>nos diferenciamos?</em></h2><p class="ed-body">{copy('','Con proceso ágil')}</p><p class="ed-body">{copy('equipo','Altum Capital cuenta')}</p><a class="ed-link" href="/equipo/">Conoce al equipo <span aria-hidden="true">↗</span></a></div><Principles items={about.principles}/></div>
+    <div class="ed-photo-strip"><Photo name="nuestra-firma.jpg"/><Photo name="QUE-HACEMOS-ALTUM.jpg"/><Photo name="QUE-HACEMOS.jpg"/></div>
   </div></section>
-  <section class="ed-section ed-difference" id="diferenciadores"><div class="wrap"><SectionHead number="04" title="NUESTRA FIRMA"/><div class="ed-principle-layout"><h2 data-editorial-reveal>¿En qué<br/><em>nos diferenciamos?</em></h2><Principles items={about.principles}/></div></div></section>
+  <section class="ed-section ed-difference"><div class="wrap"><SectionHead number="04" title="NUESTRA TRAYECTORIA"/><div class="ed-feature ed-feature--principles"><div><h2>Una firma con<br/><em>historia y perspectiva</em></h2><p class="ed-body">De la deuda privada al mercado de capitales: hitos documentados en las publicaciones de Altum Capital.</p></div><Milestones/></div></div></section>
 </EditorialLayout>

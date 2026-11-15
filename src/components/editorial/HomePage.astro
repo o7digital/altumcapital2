@@ -1,0 +1,22 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import Photo from './Photo.astro';
+import SectionHead from './SectionHead.astro';
+import NewsRows from './NewsRows.astro';
+import { about, copy, photograph } from '../../data/editorial/content';
+import { site, uses } from '../../data/site';
+import '../../styles/editorial.css';
+import '../../styles/home.css';
+const cover=photograph('BG.jpg');
+---
+<SiteLayout>
+  <main id="main" class="editorial-main ed-home" data-editorial-page="">
+    <section class="ed-home-hero" id="inicio" style={`background-image:url('${cover.local}')`}>
+      <div class="wrap ed-home-hero-grid"><div class="ed-home-hero-copy"><h1>Soluciones de <em>Financiamiento</em><br/> en MXN y USD<br/><span class="ed-home-amount">De 75M - 500M (MXN)</span></h1><a class="ed-home-contact" href="/#footer-contacto">Contáctanos <span aria-hidden="true">↗</span></a><p class="ed-home-audience">Pymes, Instituciones Financieras no Bancarias y Fondos de Capital Privado.</p></div><aside class="ed-home-notice"><a class="ed-home-video" href="https://youtu.be/WxQu3uVCs_I" target="_blank" rel="noopener noreferrer" aria-label="Reproducir video de Altum Capital"><span aria-hidden="true">▶</span></a><p>{site.notice}</p></aside></div>
+    </section>
+    <section class="ed-section"><div class="wrap"><SectionHead number="01" title="NOSOTROS" note="MÉXICO / LATINOAMÉRICA"/><div class="ed-feature"><div class="ed-feature-copy"><h2>Lo que<br/><em>hacemos</em></h2><p class="ed-body">{copy('','Altum Capital administra')}</p><p class="ed-body">{about.activity}</p><p class="ed-body">{about.objective}</p><a class="ed-link" href="/about/">Ver más sobre nuestra firma <span aria-hidden="true">↗</span></a></div><div class="ed-compact-diptych ed-home-firm-photos"><Photo name="Corporate-altum.jpg"/><Photo name="Altum-capital-business.jpg"/></div></div><dl class="ed-home-facts"><div><dd>+10</dd><dt>Años de experiencia</dt></div><div><dd>+40</dd><dt>Colaboradores</dt></div><div><dd>+450</dd><dt>Créditos otorgados</dt></div><div><dd>+50</dd><dt>Clientes activos</dt></div></dl></div></section>
+    <section class="ed-section ed-difference"><div class="wrap"><SectionHead number="02" title="TIPOS DE FONDO" note="FINANCIAMIENTO"/><div class="ed-feature ed-feature--principles"><div><h2>De Deuda<br/><em>Privada</em></h2><p class="ed-body">Acelera el crecimiento de tu empresa con nuestras soluciones</p><p class="ed-body">{copy('','Con proceso ágil')}</p><a class="ed-link" href="/soluciones-de-credito/">VER MÁS <span aria-hidden="true">↗</span></a><div class="ed-home-credit-photos"><Photo name="altum-financiamiento.jpg"/><Photo name="financiamiento-agil.jpg"/></div></div><div class="ed-home-solutions"><h3>Crédito para cada etapa de tu empresa</h3><ol>{uses.map((use,index)=><li><span>0{index+1}</span><a href="/soluciones-de-credito/#soluciones">{use} <span aria-hidden="true">↗</span></a></li>)}</ol><div class="ed-home-currencies"><article><span class="ed-small">MXN</span><h3>Altum Capital Pesos</h3><p>{copy('soluciones-de-credito','Enfoque de inversión en deuda privada en pesos')}</p></article><article><span class="ed-small">USD</span><h3>Altum Capital Dólares</h3><p>{copy('soluciones-de-credito','Enfoque de inversión en deuda privada en dólares')}</p></article></div></div></div></div></section>
+    <section class="ed-section ed-home-investors"><div class="wrap"><SectionHead number="03" title="INVERSIONISTAS"/><div class="ed-statement"><h2>Relaciones con<br/><em>perspectiva</em></h2><div><p>{copy('inversionistas','Altum ha formado')}</p><p>{copy('equipo','Nuestro Capital Humano')}</p><a class="ed-link" href="/inversionistas/">Conoce más para inversionistas <span aria-hidden="true">↗</span></a></div></div></div></section>
+    <section class="ed-section"><div class="wrap"><SectionHead number="04" title="NOTICIAS"/><div class="ed-statement ed-home-news-heading"><h2>Noticias</h2><p>Entérate de lo último en el mundo de los negocios</p></div><NewsRows limit={3}/><a class="ed-link" href="/blog/">Todas las noticias <span aria-hidden="true">↗</span></a></div></section>
+  </main>
+</SiteLayout>
