@@ -1,0 +1,26 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import source from '../data/source-pages.json';
+interface Props { slug?: string; }
+const { slug = '' } = Astro.props;
+const page = source.pages.find(page => page.slug === slug)!;
+const known = new Set(source.pages.map(page => `/${page.slug}${page.slug ? '/' : ''}`));
+function prepare(html: string) {
+  // Keep dated WordPress archive links on their original existing site.
+  return html.replace(/href="(\/[^"#?]*)([^\"]*)"/g, (match, path, rest) => {
+    if (path.startsWith('/source-media/') || known.has(path)) return match;
+    return `href="${source.origin}${path}${rest}"`;
+  }).replace('Soluciones de Financiamiento', 'Soluciones de <em>Financiamiento</em>');
+}
+---
+<SiteLayout title={page.title} inner={slug !== ''}>
+  <main id="main" class:list={['source-main', { 'source-home': slug === '' }]} data-source-page={page.source}>
+    {page.sections.map((section, index) => <section
+      class:list={['source-section', 'source-content', { 'source-hero': section.isHero, 'source-body-section': !section.isHero, 'source-photo-hero': section.isHero && section.background.length > 0 }]}
+      data-source-section={section.id}
+      data-source-background={section.background.map(item => item.source).join('|') || undefined}
+      style={section.background.length ? `background-image:${section.background.map(item => `url('${item.local}')`).join(',')}` : undefined}
+      id={index === 0 && slug === '' ? 'inicio' : undefined}
+    ><div class="wrap" set:html={prepare(section.html)} /></section>)}
+  </main>
+</SiteLayout>

@@ -1,219 +1,104 @@
 import { test, expect } from '@playwright/test';
-import content from '../src/data/imported.json' with { type: 'json' };
+import { createHash } from 'node:crypto';
+import source from '../src/data/source-pages.json' with { type: 'json' };
 
+const normalize = (text: string) => text.replace(/\s+/g, ' ').trim().toLocaleLowerCase('es');
 const viewports = [
   { width: 1440, height: 960 }, { width: 1920, height: 1080 },
   { width: 768, height: 1024 }, { width: 390, height: 844 }, { width: 320, height: 740 },
 ];
 
-for (const viewport of viewports) {
-  test(`layout and photos at ${viewport.width} × ${viewport.height}`, async ({ page }, testInfo) => {
-    await page.setViewportSize(viewport);
-    const errors: string[] = [];
-    page.on('pageerror', (error) => errors.push(error.message));
-    await page.goto('/');
-    await page.evaluate(() => document.fonts.ready);
-    await expect(page.locator('h1')).toHaveText('Soluciones definanciamiento.');
-    const amount = page.locator('.credit-amount > span').first();
-    expect(await amount.evaluate((el) => el.getBoundingClientRect().height <= parseFloat(getComputedStyle(el).fontSize) * 1.2)).toBe(true);
-    for (const image of await page.locator('main img').all()) {
-      await image.scrollIntoViewIfNeeded();
-      await expect.poll(() => image.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBeTruthy();
-      await expect(image).toHaveCSS('opacity', '1');
+for (const original of source.pages) {
+  test(`original text and photographs: /${original.slug}`, async ({ page }) => {
+    const response = await page.goto(`/${original.slug}${original.slug ? '/' : ''}`);
+    expect(response?.status()).toBe(200);
+    const text = normalize(await page.locator('main').innerText());
+    const missing = original.paragraphs.filter(paragraph => !text.includes(normalize(paragraph)));
+    expect(missing, `Text from ${original.source} must be reproduced without rewriting`).toEqual([]);
+    const images = await page.locator('main img[data-source-src]').evaluateAll(elements => [...new Set(elements.map(el => el.getAttribute('data-source-src')))]);
+    expect(images.sort()).toEqual([...original.expectedImages].sort());
+    for (const section of original.sections) {
+      for (const background of section.background) {
+        await expect(page.locator(`[data-source-section="${section.id}"]`)).toHaveAttribute('data-source-background', section.background.map(item => item.source).join('|'));
+        expect(await page.locator(`[data-source-section="${section.id}"]`).evaluate(el => getComputedStyle(el).backgroundImage)).toContain(background.local);
+      }
     }
-    const overflow = await page.evaluate(() => ({
-      page: document.documentElement.scrollWidth > innerWidth,
-      headings: [...document.querySelectorAll('h1,h2,h3')].filter((el) => {
-        const r = el.getBoundingClientRect();
-        return r.left < -1 || r.right > innerWidth + 1 || el.scrollWidth > el.clientWidth + 1;
-      }).map((el) => el.textContent),
-    }));
-    expect(overflow).toEqual({ page: false, headings: [] });
-    expect(errors).toEqual([]);
-    await page.goto('/');
-    await page.evaluate(() => document.fonts.ready);
-    await page.screenshot({ path: testInfo.outputPath(`hero-${viewport.width}.png`) });
-    // Reveal each section before the full-page capture.
-    for (const section of await page.locator('main section').all()) await section.scrollIntoViewIfNeeded();
-    await page.evaluate(() => window.scrollTo(0, 0));
-    await page.screenshot({ path: testInfo.outputPath(`page-${viewport.width}.png`), fullPage: true });
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,nofollow');
   });
 }
 
-test('currency stays coherent with mouse and keyboard', async ({ page }) => {
-  await page.goto('/');
-  const mxn = page.getByRole('tab', { name: /Capital en pesos/ });
-  const usd = page.getByRole('tab', { name: /Capital en dólares/ });
-  await usd.click();
-  const panel = page.getByRole('tabpanel');
-  await expect(usd).toHaveAttribute('aria-selected', 'true');
-  await expect(panel).toHaveAttribute('aria-labelledby', 'tab-USD');
-  await expect(panel).toContainText('Altum Capital Dólares');
-  await expect(panel).toContainText('crédito estructurado en dólares');
-  await expect(panel).not.toContainText('5—20');
-  await expect(panel).toContainText('México y Latinoamérica');
-  await expect(panel).toContainText('ingresos referenciados a dólares');
-  await usd.press('ArrowLeft');
-  await expect(mxn).toBeFocused();
-  await expect(panel).toContainText('75—500');
-  await expect(panel).toContainText('millones de pesos');
-  await mxn.press('End');
-  await expect(usd).toBeFocused();
-  await usd.press('Home');
-  await expect(mxn).toBeFocused();
-  await mxn.press('ArrowRight');
-  await expect(usd).toBeFocused();
+for (const viewport of viewports) {
+  test(`source photos and layout at ${viewport.width}px`, async ({ page }, testInfo) => {
+    await page.setViewportSize(viewport);
+    const errors: string[] = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await page.goto('/');
+    await page.evaluate(() => document.fonts.ready);
+    for (const img of await page.locator('main img').all()) {
+      await img.scrollIntoViewIfNeeded();
+      await expect.poll(() => img.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    expect(errors).toEqual([]);
+    await page.evaluate(() => scrollTo(0, 0));
+    await page.screenshot({path:testInfo.outputPath(`home-${viewport.width}.png`)});
+    await page.screenshot({path:testInfo.outputPath(`page-${viewport.width}.png`),fullPage:true});
+  });
+}
+
+test('every original image file matches the source bytes', async ({ request }) => {
+  test.setTimeout(60000);
+  for (const asset of source.assets) {
+    const response = await request.get(asset.local);
+    expect(response.status(),asset.local).toBe(200);
+    const digest = createHash('sha256').update(await response.body()).digest('hex');
+    expect(digest,asset.source).toBe(asset.sha256);
+  }
 });
 
-test('mobile navigation handles focus, Escape, selection and resize', async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
+test('original logo, menu, footer and native mobile navigation', async ({ page }) => {
+  await page.setViewportSize({width:390,height:844});
   await page.goto('/');
-  const toggle = page.getByRole('button', { name: 'Abrir menú' });
+  await expect(page.locator('.original-brand')).toHaveAttribute('src', /logo-altum-blanco\.png$/);
+  const toggle = page.getByRole('button',{name:'Abrir menú'});
   await expect(toggle).toBeEnabled();
   await toggle.click();
-  const menu = page.getByRole('navigation', { name: 'Navegación móvil' });
-  await expect(menu.getByRole('link').first()).toBeFocused();
-  await menu.getByRole('link').last().focus();
-  await page.keyboard.press('Tab');
-  await expect(page.locator('.site-header .brand')).toBeFocused();
-  await page.keyboard.press('Shift+Tab');
-  await expect(menu.getByRole('link').last()).toBeFocused();
+  const nav=page.getByRole('navigation',{name:'Navegación móvil'});
+  await expect(nav.getByRole('link')).toHaveCount(source.navigation.length);
+  await expect(nav.getByRole('link').first()).toBeFocused();
   await page.keyboard.press('Escape');
-  await expect(menu).toBeHidden();
+  await expect(nav).toBeHidden();
   await expect(toggle).toBeFocused();
   await toggle.click();
-  await menu.getByRole('link', { name: /Nuestra firma/ }).click();
-  await expect(menu).toBeHidden();
-  await expect(page).toHaveURL(/#firma$/);
-  await expect(page.locator('body')).not.toHaveCSS('overflow', 'hidden');
-  await page.goto('/');
-  await toggle.click();
-  await page.setViewportSize({ width: 1440, height: 960 });
-  await expect(menu).toBeHidden();
-  await expect(page.locator('body')).not.toHaveCSS('overflow', 'hidden');
+  await nav.getByRole('link').first().click();
+  await expect(page).toHaveURL(/\/about\/$/);
+  await expect(nav).toBeHidden();
+  await expect(page.locator('.original-brand')).toHaveAttribute('src', /altum-logo\.png$/);
+  expect(normalize(await page.locator('footer').innerText())).toBe(normalize(source.footer.text));
 });
 
-test('contact intentions, validation, native modal and mailto without a server submission', async ({ page }) => {
-  await page.goto('/');
-  const requests: string[] = [];
-  page.on('request', (request) => {
-    if (['POST', 'PUT', 'PATCH'].includes(request.method())) requests.push(request.url());
-  });
-  const investor = page.locator('[data-inquiry="inversion"]');
-  await investor.click();
-  const dialog = page.getByRole('dialog');
-  await expect(dialog).toBeVisible();
-  await expect(dialog.getByLabel('Me interesa')).toHaveValue('inversion');
-  await expect(dialog).toContainText('No almacena datos ni envía formularios.');
-  await dialog.getByRole('button', { name: 'Preparar correo' }).click();
-  expect(await page.locator('#inquiry-form').evaluate((form: HTMLFormElement) => form.checkValidity())).toBe(false);
-  await dialog.getByLabel('Nombre', { exact: true }).fill('Persona de prueba');
-  await dialog.getByLabel('Empresa', { exact: true }).fill('Empresa de prueba');
-  await dialog.getByLabel('Correo electrónico').fill('test@example.com');
-  await dialog.getByLabel('Tu proyecto').fill('Consulta de prueba.');
-  await dialog.getByRole('button', { name: 'Preparar correo' }).click();
-  await expect(dialog.getByRole('status')).toHaveText('Se abrirá tu aplicación de correo. No se ha enviado información desde este sitio.');
-  expect(requests).toEqual([]);
-  await page.keyboard.press('Escape');
-  await expect(dialog).toBeHidden();
-  await expect(investor).toBeFocused();
-  await page.locator('.contact-invitation').click();
-  await expect(dialog.getByLabel('Me interesa')).toHaveValue('financiamiento');
-  await expect(dialog.getByRole('status')).toBeEmpty();
-  await dialog.getByRole('button', { name: 'Cerrar formulario' }).click();
-  await expect(dialog).toBeHidden();
-});
-
-test('essential content, photos, both currencies and contact survive without JavaScript', async ({ browser }) => {
-  const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
-  const page = await context.newPage();
+test('source text and photographs remain available without JavaScript', async ({ browser }) => {
+  const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});
+  const page=await context.newPage();
   await page.goto(process.env.PREVIEW_URL || 'http://127.0.0.1:4321');
-  await expect(page.locator('h1')).toBeVisible();
-  await expect(page.locator('.hero-media img')).toHaveCSS('opacity', '1');
-  await expect(page.getByRole('navigation', { name: 'Navegación sin JavaScript' })).toBeVisible();
-  await expect(page.locator('.credit-explorer')).toContainText('millones de pesos');
-  const fallback = page.locator('.no-js-credit');
-  await expect(fallback).toBeVisible();
-  await expect(fallback).toContainText('crédito estructurado en dólares');
-  await expect(fallback).toContainText('México y Latinoamérica');
-  await expect(page.locator('.contact-invitation')).toHaveAttribute('href', 'mailto:contacto@altumcapital.com.mx');
-  await page.getByRole('navigation', { name: 'Navegación sin JavaScript' }).getByRole('link', { name: 'La firma' }).click();
-  await expect(page).toHaveURL(/#firma$/);
+  await expect(page.locator('h1')).toContainText('Soluciones de Financiamiento');
+  await expect(page.getByRole('navigation',{name:'Navegación sin JavaScript'})).toBeVisible();
+  expect(await page.locator('main img').count()).toBe(source.pages[0].expectedImages.length);
   await context.close();
 });
 
-test('reduced motion, anchor targets and preview indexing restrictions', async ({ page }) => {
-  await page.goto('/');
-  await expect(page.locator('.hero-media img')).toHaveCSS('animation-name', 'none');
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,nofollow');
-  const invalid = await page.locator('a[href^="#"]').evaluateAll((links) => links.filter((link) =>
-    !document.getElementById(link.getAttribute('href')!.slice(1))).map((link) => link.getAttribute('href')));
-  expect(invalid).toEqual([]);
-  const robots = await page.request.get('/robots.txt');
-  expect(await robots.text()).toContain('Disallow: /');
-});
-
-test('source content, offices and all six credit uses are present', async ({ page }) => {
-  await page.goto('/');
-  await expect(page.locator('.hero-description')).toContainText('75M – 500M');
-  await expect(page.locator('.manifesto-copy')).toContainText('deuda privada senior garantizada');
-  await expect(page.locator('.team-section')).toContainText('+180 años de experiencia acumulada');
-  await expect(page.locator('.uses')).toContainText('Recapitalizaciones y pago de dividendos');
-  await expect(page.locator('.uses')).toContainText('Management Buy Outs (MBOs)');
-  await expect(page.locator('.contact-offices')).toContainText('oficina 501A');
-  await expect(page.locator('.contact-offices')).toContainText('Av. Ricardo Margain 440 – 602');
-  await expect(page.locator('.contact-offices a[href="tel:+528183784996"]')).toHaveText('MTY: +52 81 8378 4996');
-  await expect(page.locator('.institutional-notice')).toContainText('no solicita depósitos a cuentas de terceros');
-  await expect(page.locator('.news-row')).toHaveCount(3);
-});
-
-test('all imported routes, images and local links resolve', async ({ page }) => {
+test('all migrated pages, internal links and mobile widths work', async ({ page }) => {
   test.setTimeout(60000);
-  const routes = ['/', '/about/', '/soluciones-de-credito/', '/equipo/', '/inversionistas/', '/contact/', '/blog/',
-    ...content.documents.map((entry) => `/${entry.slug}/`), ...content.posts.map((entry) => `/${entry.slug}/`)];
-  const links = new Set<string>();
-  for (const route of routes) {
-    const response = await page.goto(route);
-    expect(response?.status(), route).toBe(200);
-    await expect(page.locator('main h1')).toHaveCount(1);
-    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,nofollow');
-    const local = await page.locator('main a[href^="/"],main img[src^="/"]').evaluateAll((elements) => elements.map((el) => el.getAttribute('href') || el.getAttribute('src') || ''));
-    for (const link of local) links.add(link.split('#')[0]);
-    const post = content.posts.find((post) => route === `/${post.slug}/`);
-    if (post) {
-      await expect(page.locator('.page-intro h1')).toHaveText(post.title);
-      await expect(page.locator('.article-meta')).toContainText(post.date);
-    }
+  const links=new Set<string>();
+  await page.setViewportSize({width:320,height:740});
+  for(const original of source.pages){
+    await page.goto(`/${original.slug}${original.slug?'/':''}`);
+    await page.evaluate(()=>document.fonts.ready);
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),original.source).toBe(true);
+    for(const href of await page.locator('a[href^="/"]').evaluateAll(links=>links.map(a=>a.getAttribute('href')!.split('#')[0]))) links.add(href);
   }
-  for (const link of links) {
-    const response = await page.request.get(link);
-    expect(response.status(), link).toBe(200);
+  for(const href of links){
+    const response=await page.request.get(href);
+    expect(response.status(),href).toBe(200);
   }
 });
-
-test('news archive, dated articles and complete legal content are local', async ({ page }) => {
-  await page.goto('/blog/');
-  await expect(page.locator('.news-row')).toHaveCount(9);
-  await page.locator('.news-row h3 a').first().click();
-  await expect(page.locator('.prose')).toContainText('200 millones de pesos');
-  await expect(page.locator('.article-meta')).toContainText('junio 26, 2025');
-  await page.goto('/legal/');
-  await expect(page.locator('.legal-content')).toContainText('Sophomon');
-  await expect(page.locator('.legal-content')).toContainText('Unidad Especializada de Atención');
-  await expect(page.locator('.legal-content')).toContainText('mschlam@altumcapital.mx');
-  await expect(page.locator('.legal-content img')).toHaveCount(10);
-  await page.goto('/aviso-de-privacidad/');
-  await expect(page.locator('.legal-content')).toContainText('15 de julio de 2016');
-  await expect(page.locator('.legal-content')).toContainText('administrador@altumcapital.com.mx');
-});
-
-for (const viewport of [{width: 1440, height: 960}, {width: 320, height: 740}]) {
-  test(`inner routes fit at ${viewport.width}px`, async ({ page }) => {
-    await page.setViewportSize(viewport);
-    for (const route of ['/about/', '/equipo/', '/soluciones-de-credito/', '/inversionistas/', '/blog/', '/contact/', '/legal/', '/aviso-de-privacidad/', `/${content.posts[0].slug}/`]) {
-      await page.goto(route);
-      await page.evaluate(() => document.fonts.ready);
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), route).toBe(true);
-    }
-  });
-}

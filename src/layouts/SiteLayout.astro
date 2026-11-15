@@ -1,11 +1,10 @@
 ---
 import Header from '../components/Header';
 import Footer from '../components/Footer.astro';
-import ContactPanel from '../components/ContactPanel';
 import { navigation, site } from '../data/site';
 import '../styles/fonts.css';
 import '../styles/global.css';
-import '../styles/content.css';
+import '../styles/faithful.css';
 interface Props { title?: string; description?: string; inner?: boolean; }
 const { title = 'Altum Capital — Financiamiento para Empresas', description = site.description, inner = false } = Astro.props;
 ---
@@ -13,12 +12,11 @@ const { title = 'Altum Capital — Financiamiento para Empresas', description = 
 <html lang="es"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>{title}</title><meta name="description" content={description}/><meta name="robots" content="noindex,nofollow"/><meta name="theme-color" content="#222921"/><link rel="icon" href="/favicon.svg" type="image/svg+xml"/></head>
 <body class:list={{ 'inner-page': inner }}>
   <a class="skip-link" href="#main">Saltar al contenido</a>
-  <Header client:load />
+  <Header inner={inner} client:load />
   <slot />
   <Footer />
-  <ContactPanel client:load />
   <noscript><style is:inline>.hero-media img,.firm-image img,.investor-landscape img{opacity:1}.currency-tabs,.menu-toggle{display:none}</style>
     <nav class="no-js-nav" aria-label="Navegación sin JavaScript">{navigation.map((link) => <a href={link.href}>{link.label}</a>)}<a href="/#contacto">Contacto</a></nav>
   </noscript>
-  <script src="../scripts/effects.ts"></script>
+
 </body></html>

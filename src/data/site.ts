@@ -1,3 +1,4 @@
+import source from './source-pages.json';
 export const site = {
   name: 'Altum Capital',
   email: 'contacto@altumcapital.com.mx',
@@ -16,14 +17,7 @@ export const site = {
   youtube: 'https://www.youtube.com/watch?v=WxQu3uVCs_I',
 };
 
-export const navigation = [
-  { href: '/#firma', label: 'La firma', mobile: 'Nuestra firma' },
-  { href: '/#soluciones', label: 'Crédito', mobile: 'Soluciones de crédito' },
-  { href: '/equipo/', label: 'Equipo', mobile: 'Equipo' },
-  { href: '/#inversionistas', label: 'Inversionistas', mobile: 'Inversionistas' },
-  { href: '/blog/', label: 'Noticias', mobile: 'Noticias' },
-  { href: '/legal/', label: 'Legal', mobile: 'Legal' },
-] as const;
+export const navigation = source.navigation.map(link => ({ ...link, mobile: link.label }));
 
 export const offices = [
   { city: 'Ciudad de México', short: 'CDMX', phone: '+52 55 6721 1031', tel: '+525567211031',
